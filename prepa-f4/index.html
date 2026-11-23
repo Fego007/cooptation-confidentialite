@@ -29,7 +29,7 @@
   --ink:#12161C;
   --muted:#5A6370;
   --line:#D3D8DF;
-  --accent:#1B52C4;           /* bleu de France */
+  --accent:#1B52C4; --chart:#1B52C4;           /* bleu de France */
   --accent-ink:#FFFFFF;
   --ok:#0F8546; --ok-bg:#E1F3E8;
   --warn:#A56A00; --warn-bg:#FBEFCF;
@@ -43,7 +43,7 @@
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#0E1115; --surface:#171B21; --ink:#ECEFF3; --muted:#9BA4B0; --line:#2A313A;
-    --accent:#7CA6FF; --accent-ink:#0A1226;
+    --accent:#7CA6FF; --accent-ink:#0A1226; --chart:#5A8BEE;
     --ok:#43C985; --ok-bg:#12301F; --warn:#F0B93F; --warn-bg:#3A2C0A;
     --bad:#FF7268; --bad-bg:#3B1715; --best:#B690FF; --best-bg:#2A1C4B;
     --board:#000000; --board-plate:#14171B; --board-ink:#F4E73B; --board-dim:#8A919B;
@@ -52,7 +52,7 @@
 }
 :root[data-theme="dark"]{
   --bg:#0E1115; --surface:#171B21; --ink:#ECEFF3; --muted:#9BA4B0; --line:#2A313A;
-  --accent:#7CA6FF; --accent-ink:#0A1226;
+  --accent:#7CA6FF; --accent-ink:#0A1226; --chart:#5A8BEE;
   --ok:#43C985; --ok-bg:#12301F; --warn:#F0B93F; --warn-bg:#3A2C0A;
   --bad:#FF7268; --bad-bg:#3B1715; --best:#B690FF; --best-bg:#2A1C4B;
   --board:#000000; --board-plate:#14171B; --board-ink:#F4E73B; --board-dim:#8A919B;
@@ -226,6 +226,20 @@ textarea.copy{width:100%;min-height:150px;border:1px solid var(--line);border-ra
 .t-ctl button.main{background:var(--board-ink);border-color:var(--board-ink);color:#0B0D10}
 .t-ctl button:disabled{opacity:.35}
 body.lock{overflow:hidden}
+.evo{display:grid;gap:6px;padding-top:12px;border-top:1px solid var(--line)}
+.evo-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.evo-h b{font-weight:600}
+.evo-v{font:700 24px/1 var(--font-display);font-variant-numeric:tabular-nums;white-space:nowrap}
+.evo-d{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:13px;color:var(--muted)}
+.chart{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font:400 11px/1 var(--font-body);fill:var(--muted);font-variant-numeric:tabular-nums}
+.ch-gl{stroke:var(--line);stroke-width:1}
+.ch-ln{fill:none;stroke:var(--chart);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.ch-pt{fill:var(--chart);stroke:var(--surface);stroke-width:2}
+.ch-col{fill:var(--chart)}
+.ch-hit{fill:transparent;pointer-events:all;cursor:pointer}
+.tipline{margin:0;font-size:13px;color:var(--muted);min-height:19px}
+.inwrap select{padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit}
 </style>
 </head>
 <body>
@@ -287,6 +301,9 @@ var SLOTS = [
   {k:"E",  c:"E", t:"Force · complet + endurance douce", dur:"45 à 50 min",  a:"9 h 30",                      b:"l'après-midi"}
 ];
 var PRIO = ["A","C","E","F","B","D","m1"];
+var CIRCUITS = ["Dijon","Magny-Cours","Mugello","Spa"];
+var LIFTS = [["c_sq","Squat à la poulie basse","kg"],["c_tv","Tirage vertical","kg"],["f_row","Tirage à un bras","kg"],["f_pp","Pompes, première série","rép."],["e_sdt","Soulevé de terre","kg"],["e_row","Tirage horizontal","kg"]];
+function circuitOf(w){ var rw=raceWeek(); if (w>rw) return CIRCUITS[1]; if (w>=rw-4 || w%4!==0) return CIRCUITS[0]; return CIRCUITS[1+((w/4-1)%3)]; }
 var TESTS = [
   {id:"planche",  n:"Planche ventrale",              u:"s",   s:"A", sw:1, p:"Temps maximal, corps aligné."},
   {id:"latG",     n:"Planche latérale gauche",       u:"s",   s:"A", sw:1, p:"Temps maximal."},
@@ -313,7 +330,7 @@ function nowPos(){ var diff=Math.floor((todayUTC()-startUTC)/DAY); if (diff<0) r
 function blank(){ return {v:1, u:0, race:"2027-04-23", log:{}, ck:{}, tests:{}, dn:{}}; }
 function merge(o){ var s=blank(); if (o && typeof o==="object"){ for (var k in s) if (o[k]!=null && typeof o[k]===typeof s[k]) s[k]=o[k]; } return s; }
 var state = blank();
-var ui = {tab:"seance", w:1, i:0, express:false, long:false, bk:"", restore:false, msg:"", tw:1, copy:"", resetArm:false};
+var ui = {tab:"seance", w:1, i:0, express:false, long:false, bk:"", restore:false, msg:"", tw:1, copy:"", resetArm:false, tip:null};
 var LS = "prepa-f4-2027";
 
 function raceWeek(){ return state.race==="2027-04-30" ? 23 : 22; }
@@ -625,20 +642,25 @@ function build(w,i,express,longV){
       add("Endurance douce","Facultative : 15 à 20 minutes de marche rapide ou de vélo, à l'allure de la conversation. En famille si tu veux.");
     }
     hip();
+    fields = k==="C" ? [["c_sq","Squat à la poulie, meilleure série (kg)","number"],["c_tv","Tirage vertical (kg)","number"]]
+           : k==="F" ? [["f_row","Tirage à un bras (kg)","number"],["f_pp","Pompes, première série (répétitions)","number"]]
+           : [["e_sdt","Soulevé de terre (kg)","number"],["e_row","Tirage horizontal (kg)","number"],["kg","Poids ce matin, à jeun (kg)","number"]];
   }
 
   else if (k==="D"){
     note="À chaque virage : les yeux déjà à la corde quand tu freines, déjà à la sortie quand tu touches la corde.";
+    add("Circuit de la semaine", circuitOf(w)+". La saison 2027 : Dijon, Magny-Cours, Mugello, Spa. Dijon revient trois semaines sur quatre jusqu'à la première course. Si tu roules ailleurs, change le circuit en bas de séance : chaque circuit a sa propre courbe dans le Suivi.");
     add("Réglages","Frein ferme : la force maximale que tu tiens proprement pendant 20 minutes. Retour de force ferme, sans douleur au poignet. Pédalier assez proche pour garder le genou gauche fléchi à fond de frein. Gants et chaussures"+((p==="p3"||p==="p4")?", casque sur la tête.":"."));
     add("Réflexes · Batak","3 × 60 s : normal, puis regard fixé au centre, puis en comptant à rebours de 3 en 3 à voix haute.",[W("Batak · normal",60),R(30),W("Batak · regard au centre",60),R(30),W("Batak · en comptant à rebours",60)]);
     add("Freinage · dix fois le même virage","Attaque franche, relâcher régulier jusqu'à la corde. Tu regardes la trace de frein, pas le chrono.",[W("Dix freinages",360)]);
     if (p==="p1"){ var d1=S(2); add("Relais", d1+" × 10 minutes. Un seul objectif : des tours qui se ressemblent. Entre les relais, tu te lèves et tu étires les hanches.", reps(d1,600,120,"Relais","Debout, étire les hanches")); }
     else if (p==="p2"){ var d2=S(3), s2=[]; for (var e=1;e<=d2;e++){ s2.push(W("Relais · "+e+"/"+d2,600)); if (e<d2){ s2.push(W("Planche",60),W("15 squats",40)); } } add("Relais sous fatigue", d2+" × 10 minutes. Entre deux relais : 1 minute de planche et 15 squats, puis tu repars tout de suite.", s2); }
     else if (p==="p3"){ var c3=half?12:20; add("Course","3 minutes de vélo à 8/10, puis une course de "+c3+" minutes sans pause, casque sur la tête.",[W("Vélo à 8/10",180),R(45,"Installe-toi"),W("Course",c3*60)]); }
-    else if (p==="p4"){ var c4=half?15:25; add("Week-end en miniature","5 tours de qualification, 3 minutes de pause, puis une course de "+c4+" minutes. Dijon d'abord, puis Charade et Magny-Cours."); }
+    else if (p==="p4"){ var c4=half?15:25; add("Week-end en miniature","5 tours de qualification, 3 minutes de pause, puis une course de "+c4+" minutes. Sur le circuit de la semaine."); }
     else { add("Dijon, en rappel","Tours de qualification, départs lancés, 15 minutes de course. Tu t'arrêtes en forme."); }
     if (testW){ tests=["batak","regul"]; testsAt=B.length; fields=[["best","Meilleur tour","text"]]; }
     else fields=[["best","Meilleur tour","text"],["gap","Écart sur 10 tours (s)","number"],["batak","Score Batak","number"]];
+    fields.unshift(["circ","Circuit roulé","select",CIRCUITS,circuitOf(w)]);
   }
 
   else {
@@ -758,7 +780,9 @@ function viewSeance(){
   if (b.fields.length){
     var dn=state.dn[w]||{};
     h+='<li class="blk"><span></span><div class="tests-in" style="background:var(--bg)"><h3 style="color:var(--ink)">À noter après la séance</h3>';
-    b.fields.forEach(function(f){ h+='<div class="field"><label for="dn-'+f[0]+'">'+f[1]+'</label><div class="inwrap"><input id="dn-'+f[0]+'" type="'+(f[2]==="number"?'number" inputmode="decimal" step="0.01':'text')+'" data-dn="'+f[0]+'" value="'+(dn[f[0]]!=null?esc(dn[f[0]]):"")+'"'+(f[2]==="text"?' placeholder="1:23.456" style="width:110px"':'')+'></div></div>'; });
+    b.fields.forEach(function(f){
+      if (f[2]==="select"){ var cur=f[3].indexOf(dn[f[0]])>=0?dn[f[0]]:f[4]; h+='<div class="field"><label for="dn-'+f[0]+'">'+f[1]+'</label><div class="inwrap"><select id="dn-'+f[0]+'" data-dn="'+f[0]+'">'+f[3].map(function(o){ return '<option'+(o===cur?' selected':'')+'>'+esc(o)+'</option>'; }).join("")+'</select></div></div>'; return; }
+      h+='<div class="field"><label for="dn-'+f[0]+'">'+f[1]+'</label><div class="inwrap"><input id="dn-'+f[0]+'" type="'+(f[2]==="number"?'number" inputmode="decimal" step="0.01':'text')+'" data-dn="'+f[0]+'" value="'+(dn[f[0]]!=null?esc(dn[f[0]]):"")+'"'+(f[2]==="text"?' placeholder="1:23.456" style="width:110px"':'')+'></div></div>'; });
     h+='</div><span></span></li>';
   }
   if ((i===2||i===4) && b.special!=="race"){ var tk=i===2?"T1":"T2", tv=!!(state.log[w]&&state.log[w][tk]);
@@ -788,11 +812,93 @@ function summaryText(){
   var d=debt(pos); L.push("À rattraper : "+(d.length?d.map(function(x){return SLOTS[x].c+" "+SLOTS[x].t;}).join(" ; "):"rien"));
   L.push("Depuis le 23 novembre : "+s.done+" séances sur "+s.planned+" prévues ("+s.pct+" %)");
   TESTW.forEach(function(tw){ var t=state.tests[tw]; if (!t) return; var a=[]; TESTS.forEach(function(x){ if (t[x.id]!=null) a.push(x.n+" "+numFr(t[x.id])+" "+x.u); }); if (a.length) L.push("Tests S"+tw+" : "+a.join(", ")); });
+  evoMetrics().forEach(function(m){ var q=m.pts, a=q[0], b=q[q.length-1]; L.push(m.n+" : "+(q.length>1?m.f(a.v)+" (S"+a.w+") → ":"")+m.f(b.v)+" (S"+b.w+")"); });
   return L.join("\n");
 }
+/* ------------------------------------------------------------------ évolution */
+function numOf(v){ if (v==null||v==="") return null; var x=parseFloat(String(v).replace(",",".")); return isFinite(x)?x:null; }
+function lapSec(v){ if (v==null) return null; var t=String(v).trim().replace(",",".").replace(/['’′]/g,":").replace(/["”″]/g,"."), m=t.match(/^(\d{1,2}):(\d{1,2}(?:\.\d{1,3})?)$/); if (m) return parseInt(m[1],10)*60+parseFloat(m[2]); return /^\d{2,3}(\.\d{1,3})?$/.test(t)?parseFloat(t):null; }
+function lapFmt(x,dec){ if (dec==null) dec=3; var m=Math.floor(x/60), t=(x-m*60).toFixed(dec); if (parseFloat(t)>=60){ m++; t=(0).toFixed(dec); } return m+":"+(parseFloat(t)<10?"0":"")+t; }
+function fmtU(u){ return function(v,dec){ return dec==null ? numFr(parseFloat(v.toFixed(2)))+" "+u : numFr(v.toFixed(dec)); }; }
+function byW(a,b){ return a.w-b.w; }
+function dnSeries(key){ var a=[]; Object.keys(state.dn).forEach(function(k){ var v=numOf((state.dn[k]||{})[key]); if (v!=null) a.push({w:parseInt(k,10),v:v}); }); return a.sort(byW); }
+function testSeries(id){ var a=[]; Object.keys(state.tests).forEach(function(k){ var v=(state.tests[k]||{})[id]; if (v!=null) a.push({w:parseInt(k,10),v:v}); }); return a.sort(byW); }
+function mergeSeries(a,b){ var m={}, out=[]; b.concat(a).forEach(function(q){ m[q.w]=q.v; }); Object.keys(m).forEach(function(k){ out.push({w:parseInt(k,10),v:m[k]}); }); return out.sort(byW); }
+function circOfWeek(w){ var c=(state.dn[w]||{}).circ; return CIRCUITS.indexOf(c)>=0?c:circuitOf(w); }
+function weightSeries(){ return mergeSeries(dnSeries("kg"),testSeries("poids")); }
+function evoMetrics(){
+  var M=[], laps={};
+  Object.keys(state.dn).forEach(function(k){ var w=parseInt(k,10), t=lapSec((state.dn[k]||{}).best); if (t==null) return; var c=circOfWeek(w); (laps[c]||(laps[c]=[])).push({w:w,v:t}); });
+  CIRCUITS.forEach(function(c){ if (laps[c]) M.push({g:"sim",id:"lap-"+c,n:c+" · meilleur tour",pts:laps[c].sort(byW),f:lapFmt,lower:1,u:"s",lap:1}); });
+  var gap=mergeSeries(dnSeries("gap").filter(function(q){ return circOfWeek(q.w)===CIRCUITS[0]; }),testSeries("regul")); if (gap.length) M.push({g:"sim",id:"gap",n:"Dijon · écart sur 10 tours",pts:gap,f:fmtU("s"),lower:1,u:"s"});
+  var bt=mergeSeries(dnSeries("batak"),testSeries("batak")); if (bt.length) M.push({g:"sim",id:"batak",n:"Batak 60 s",pts:bt,f:fmtU("pts"),u:"pts"});
+  LIFTS.forEach(function(l){ var q=dnSeries(l[0]); if (q.length) M.push({g:"force",id:l[0],n:l[1],pts:q,f:fmtU(l[2]),u:l[2]}); });
+  var kg=weightSeries(); if (kg.length) M.push({g:"corps",id:"kg",n:"Poids",pts:kg,f:fmtU("kg"),u:"kg",neutral:1});
+  var ta=testSeries("taille"); if (ta.length) M.push({g:"corps",id:"taille",n:"Tour de taille",pts:ta,f:fmtU("cm"),u:"cm",neutral:1});
+  return M;
+}
+function ticks(mn,mx){
+  if (mx-mn<1e-9){ var pad=Math.abs(mn)*0.02||1; mn-=pad; mx+=pad; }
+  var raw=(mx-mn)/2, p10=Math.pow(10,Math.floor(Math.log(raw)/Math.LN10+1e-9)), f=raw/p10, st=(f<=1?1:f<=2?2:f<=5?5:10)*p10;
+  var lo=Math.floor(mn/st+1e-9)*st, hi=Math.ceil(mx/st-1e-9)*st, a=[], n=Math.round((hi-lo)/st), dec=st>=1?0:Math.min(3,Math.ceil(-Math.log(st)/Math.LN10-1e-9));
+  for (var i=0;i<=n;i++) a.push(lo+i*st);
+  return {a:a,dec:dec};
+}
+function tipline(id,hint){ return '<p class="tipline" aria-live="polite">'+((ui.tip&&ui.tip.c===id)?esc(ui.tip.t):(hint||'Touche un point pour lire sa valeur.'))+'</p>'; }
+function lineChart(m){
+  var q=m.pts, W0=320, H0=132, x0=54, x1=W0-10, y0=12, y1=H0-24, vs=q.map(function(e){ return e.v; }), tk=ticks(Math.min.apply(null,vs),Math.max.apply(null,vs)), lo=tk.a[0], hi=tk.a[tk.a.length-1], wa=q[0].w, wb=q[q.length-1].w, d="", s;
+  function X(w){ return wb===wa?(x0+x1)/2:x0+(x1-x0)*(w-wa)/(wb-wa); }
+  function Y(v){ return y1-(y1-y0)*(v-lo)/(hi-lo); }
+  s='<svg class="chart" viewBox="0 0 '+W0+' '+H0+'" role="img" aria-label="'+esc(m.n)+', de S'+wa+' à S'+wb+'">';
+  tk.a.forEach(function(t){ var y=Y(t); s+='<line class="ch-gl" x1="'+(x0-8)+'" x2="'+W0+'" y1="'+y.toFixed(1)+'" y2="'+y.toFixed(1)+'"/><text x="'+(x0-12)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end">'+m.f(t,tk.dec)+'</text>'; });
+  q.forEach(function(e,ix){ d+=(ix?"L":"M")+X(e.w).toFixed(1)+" "+Y(e.v).toFixed(1); });
+  s+='<path class="ch-ln" d="'+d+'"/>';
+  q.forEach(function(e,ix){ var end=(ix===q.length-1); if (q.length<=12||end) s+='<circle class="ch-pt" cx="'+X(e.w).toFixed(1)+'" cy="'+Y(e.v).toFixed(1)+'" r="'+(end?5:4)+'"/>'; });
+  q.forEach(function(e){ s+='<circle class="ch-hit" data-act="tip" data-c="'+esc(m.id)+'" data-t="S'+e.w+' · '+esc(m.f(e.v))+'" cx="'+X(e.w).toFixed(1)+'" cy="'+Y(e.v).toFixed(1)+'" r="13"/>'; });
+  s+='<text x="'+x0+'" y="'+(H0-6)+'" text-anchor="middle">S'+wa+'</text><text x="'+x1+'" y="'+(H0-6)+'" text-anchor="middle">S'+wb+'</text></svg>';
+  return s+tipline(m.id);
+}
+function colChart(id,vals){
+  var n=vals.length, W0=320, H0=112, xl=22, x1=W0-2, y0=10, y1=H0-24, slot=(x1-xl)/n, bw=Math.min(24,Math.max(3,slot-2));
+  var s='<svg class="chart" viewBox="0 0 '+W0+' '+H0+'" role="img" aria-label="Séances faites par semaine, de S1 à S'+n+'">';
+  [0,7].forEach(function(t){ var y=y1-(y1-y0)*t/7; s+='<line class="ch-gl" x1="'+xl+'" x2="'+W0+'" y1="'+y+'" y2="'+y+'"/><text x="'+(xl-6)+'" y="'+(y+4)+'" text-anchor="end">'+t+'</text>'; });
+  vals.forEach(function(v,ix){ var x=xl+slot*ix+(slot-bw)/2, hh=(y1-y0)*v/7, y=y1-hh, r=Math.min(4,bw/2,hh);
+    if (v>0) s+='<path class="ch-col" d="M'+x.toFixed(1)+' '+y1+'V'+(y+r).toFixed(1)+'Q'+x.toFixed(1)+' '+y.toFixed(1)+' '+(x+r).toFixed(1)+' '+y.toFixed(1)+'H'+(x+bw-r).toFixed(1)+'Q'+(x+bw).toFixed(1)+' '+y.toFixed(1)+' '+(x+bw).toFixed(1)+' '+(y+r).toFixed(1)+'V'+y1+'Z"/>';
+    s+='<rect class="ch-hit" data-act="tip" data-c="'+id+'" data-t="S'+(ix+1)+' · '+v+' séance'+(v>1?'s':'')+' sur 7" x="'+(xl+slot*ix).toFixed(1)+'" y="'+y0+'" width="'+slot.toFixed(1)+'" height="'+(y1-y0)+'"/>'; });
+  s+='<text x="'+(xl+slot/2).toFixed(1)+'" y="'+(H0-6)+'" text-anchor="middle">S1</text><text x="'+(x1-slot/2).toFixed(1)+'" y="'+(H0-6)+'" text-anchor="middle">S'+n+'</text></svg>';
+  return s+tipline(id,'Touche une barre pour lire sa valeur.');
+}
+function deltaTxt(m){
+  var q=m.pts; if (q.length<2) return "";
+  var a=q[0], b=q[q.length-1], d=b.v-a.v, good=m.lower?d<0:d>0, ab=Math.abs(d);
+  return '<span class="pill '+((m.neutral||d===0)?'':(good?'ok':'bad'))+'">'+(d>0?"+":(d<0?"−":""))+numFr(m.lap?ab.toFixed(3):parseFloat(ab.toFixed(2)))+' '+m.u+' depuis S'+a.w+'</span>';
+}
+function evoBlock(m){
+  var q=m.pts, a=q[0], b=q[q.length-1], h='<div class="evo"><div class="evo-h"><b>'+esc(m.n)+'</b><span class="evo-v">'+m.f(b.v)+'</span></div><div class="evo-d">'+deltaTxt(m);
+  if (m.lap && q.length>1){ var best=q.reduce(function(x,y){ return y.v<x.v?y:x; }); h+='<span>Record : '+m.f(best.v)+' (S'+best.w+')</span>'; }
+  if (m.id==="kg" && b.w>a.w){ var r=(b.v-a.v)/((b.w-a.w)/4.345); h+='<span>Rythme : '+(r>0?"+":(r<0?"−":""))+numFr(Math.abs(r).toFixed(1))+' kg par mois</span>'; }
+  h+='<span>Dernière mesure : S'+b.w+'</span></div>'+(q.length>1?lineChart(m):'<p class="tipline">Encore une mesure pour tracer la courbe.</p>');
+  return h+'</div>';
+}
+function viewEvo(pos){
+  var M=evoMetrics(), h="", any=false, rows="";
+  if (pos.w>=2){ var vals=[]; for (var w=1;w<=pos.w;w++) vals.push(score(w)); h+='<section class="card"><h2>Séances par semaine</h2><p class="meta" style="margin-top:-6px">Sur 7. La semaine en cours n\'est pas finie.</p>'+colChart("sc",vals)+'</section>'; }
+  [["sim","Simulateur","Note le circuit, ton meilleur tour et l\'écart en fin de séance. La courbe descend quand tu vas plus vite."],
+   ["force","Force","Note la charge de ta meilleure série en fin de séance. La courbe monte quand tu progresses."],
+   ["corps","Corps","Pesée le dimanche matin, à jeun. La cible : autour d\'un kilo par mois."]].forEach(function(g){
+    var ms=M.filter(function(m){ return m.g===g[0]; }); if (!ms.length) return; any=true;
+    h+='<section class="card"><h2>'+g[1]+'</h2><p class="meta" style="margin-top:-6px">'+g[2]+'</p>'+ms.map(evoBlock).join("")+'</section>'; });
+  TESTS.forEach(function(t){ if (["poids","taille","batak","regul"].indexOf(t.id)>=0) return; var q=testSeries(t.id); if (!q.length) return;
+    rows+=evoBlock({id:"t-"+t.id,n:t.n,pts:q,f:fmtU(t.u),u:t.u,lower:t.lower,neutral:t.neutral}); });
+  if (rows){ any=true; h+='<section class="card"><h2>Tests physiques</h2><p class="meta" style="margin-top:-6px">Aux semaines S1, S5, S10, S14 et S18.</p>'+rows+'</section>'; }
+  if (!any) h+='<section class="card"><h2>Ta progression</h2><p>Les courbes se tracent toutes seules à partir de ce que tu notes : le circuit et le meilleur tour au simulateur, la charge en fin de séance de force, le poids du dimanche, les tests. Il faut deux mesures pour une courbe.</p></section>';
+  return h;
+}
+
 function viewSuivi(){
   var pos=nowPos(), s=stats(pos), maxW=Math.max(23,pos.w), d=debt(pos), h="";
   h+='<div class="tiles"><div class="tile"><small>Cette semaine</small><b>'+score(pos.w)+'/7</b></div><div class="tile"><small>Depuis le début</small><b>'+s.pct+' %</b></div><div class="tile"><small>À rattraper</small><b style="color:'+(d.length?'var(--bad)':'var(--ok)')+'">'+d.length+'</b></div></div>';
+  h+=viewEvo(pos);
   h+='<section class="card"><h2>La grille</h2><p class="meta" style="margin-top:-6px">'+s.done+' séances faites sur '+s.planned+' prévues à ce jour. Touche une case pour ouvrir la séance.</p><div class="grid-wrap"><table class="grid"><thead><tr><th style="text-align:left">Semaine</th>';
   SLOTS.forEach(function(x){ h+='<th>'+x.c+'</th>'; }); h+='<th>/7</th></tr></thead><tbody>';
   for (var w=1;w<=maxW;w++){
@@ -831,7 +937,7 @@ function viewTests(){
 }
 
 function protLine(){
-  var w=null; [18,14,10,5,1].some(function(t){ var v=(state.tests[t]||{}).poids; if (v!=null){ w=v; return true; } return false; });
+  var ws=weightSeries(), w=ws.length?ws[ws.length-1].v:null;
   return w ? "Avec ton dernier poids saisi, "+numFr(w)+" kg : environ "+(Math.round(w*1.6/5)*5)+" g par jour." : "Saisis ton poids dans l'onglet Tests pour avoir ton chiffre.";
 }
 function standalone(){ try{ return typeof window!=="undefined" && (window.navigator.standalone===true || window.matchMedia("(display-mode: standalone)").matches); }catch(e){ return false; } }
@@ -841,6 +947,8 @@ function viewReperes(){
      '<li><b>Plus costaud</b> : trois séances de force par semaine, sur ta machine (jusqu\'à 50 kg), au poids du corps et avec un sac à dos chargé. Cuisses le mercredi et le dimanche, dos le mercredi, le vendredi et le dimanche, pectoraux le vendredi et le dimanche.</li>'+
      '<li><b>Le dos d\'abord</b> : il travaille cinq jours sur sept. Tirages le mercredi, le vendredi et le dimanche, bloc posture le lundi, rappel le jeudi. Le vendredi et le dimanche, le dos passe avant les pectoraux. Quand la machine est au maximum : un bras à la fois et descente en 4 secondes.</li>'+
      '<li><b>La posture</b> : le renforcement redresse surtout le haut du dos. Pour la cambrure, l\'effet des exercices est moins net : on y ajoute le gainage du lundi et l\'étirement des hanches en fin de séance. Un bilan chez un kiné aide à cibler.</li>'+
+     '<li><b>Le simulateur</b> : la saison 2027 passe par Dijon, Magny-Cours, Mugello et Spa. Dijon trois semaines sur quatre jusqu\'à la première course, un autre circuit la quatrième.</li>'+
+     '<li><b>Ta progression</b> : dans l\'onglet Suivi, une courbe par circuit, par exercice de force, pour le poids et pour chaque test. Elles se tracent à partir de ce que tu notes en fin de séance.</li>'+
      '<li><b>Le volume fait le muscle</b> : environ 10 séries par groupe et par semaine en phase 1, 15 ensuite. La charge monte dès que tu atteins le haut de la fourchette.</li>'+
      '<li><b>Plus vif, plus rapide</b> : un bloc de vivacité de 3 minutes en tête de chaque séance de force, quand tu es frais. Genoux rapides, squat explosif, pompes rapides, sprints de 8 secondes sur le vélo. Peu de répétitions, vitesse maximale.</li>'+
      '<li><b>Sous 2 m de plafond</b> : aucun saut, pas de corde à sauter, pas de montée sur un banc, et le tapis en marche seulement.</li>'+
@@ -1041,6 +1149,7 @@ document.addEventListener("click",function(ev){
   else if (act==="chrono"){ runBlocks(build(ui.w,ui.i,ui.express,ui.long),parseInt(el.getAttribute("data-b"),10)); }
   else if (act==="sw"){ var id=el.getAttribute("data-id"), w=parseInt(el.getAttribute("data-w"),10);
     openTimer({sw:true,title:testById(id).n,onValue:function(v){ (state.tests[w]||(state.tests[w]={}))[id]=v; commit(); }}); }
+  else if (act==="tip"){ ui.tip={c:el.getAttribute("data-c"),t:el.getAttribute("data-t")}; render(); }
   else if (act==="tw"){ ui.tw=parseInt(el.getAttribute("data-w"),10); render(); }
   else if (act==="race"){ state.race=el.getAttribute("data-r"); commit(); }
   else if (act==="reset"){ if (!ui.resetArm){ ui.resetArm=true; render(); } else { ui.resetArm=false; var r=state.race; state=blank(); state.race=r; commit(); } }
