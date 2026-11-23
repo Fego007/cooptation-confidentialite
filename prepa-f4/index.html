@@ -278,7 +278,7 @@ var PH = {
   p4:["Phase 4","Intensité course"], aff:["Affûtage","Moins de volume, même intensité"], sai:["En saison","Entretien entre deux meetings"]
 };
 var SLOTS = [
-  {k:"A",  c:"A", t:"Cou + gainage",                     dur:"20 min",       a:"6 h, avant le bureau",        b:"21 h"},
+  {k:"A",  c:"A", t:"Cou + gainage",                     dur:"20 à 30 min",  a:"6 h, avant le bureau",        b:"21 h"},
   {k:"B",  c:"B", t:"Cardio fractionné",                 dur:"25 min",       a:"6 h, avant le bureau",        b:"21 h"},
   {k:"C",  c:"C", t:"Force · cuisses + dos",             dur:"40 min",       a:"12 h 30, à la maison",        b:"17 h au plus tard, tennis à 20 h 30"},
   {k:"m1", c:"m", t:"Micro-séance : cou + vision",       dur:"10 min",       a:"12 h 30 au bureau",           b:"21 h"},
@@ -418,6 +418,8 @@ var ILL={
     figs:[{hip:[40,46],t:275,arms:[[20,20],[20,20]],legs:[[90,90],[90,90]]}],props:[["floor",79],["box",102,3,6,4],["band","h1",[104,7]],["arrow",72,36,62,50]]},
   ecarte:{how:"Vu de dessus : allongé, haltères au-dessus de la poitrine, coudes à peine fléchis. Tu ouvres les bras jusqu'à sentir l'étirement, puis tu refermes comme pour serrer un tronc d'arbre.",
     figs:[],props:[["line",[60,28],[60,56],"nb",12],["line",[60,58],[55,78],"nb"],["line",[60,58],[65,78],"nb"],["line",[55,31],[32,33],"nb"],["line",[65,31],[88,33],"nb"],["circ",[60,17],6,"hd"],["db",[30,33],"v"],["db",[90,33],"v"],["arrow",30,22,45,17],["arrow",90,22,75,17],["txt",25,79,"vue de dessus"]]},
+  lat:{how:"Debout, un petit haltère dans chaque main. Tu écartes les bras sur les côtés jusqu'à l'horizontale, coudes à peine fléchis, puis tu redescends lentement.",
+    figs:[],props:[["floor",79]].concat(FRONT,[["line",[56,25],[35,27],"nb"],["line",[64,25],[85,27],"nb"],["circ",[60,12],5.5,"hd"],["db",[33,27],"v"],["db",[87,27],"v"],["arrow",24,46,24,34],["arrow",96,46,96,34]])},
   bitri:{how:"Biceps, à gauche : poulie basse, coudes collés au corps, tu montes les mains vers les épaules. Triceps, à droite : poulie haute, coudes collés, tu tends les bras vers le bas.",
     figs:[{hip:[30,46],t:270,arms:[[90,330],[90,330]],legs:[[90,90],[90,90]]},{hip:[84,46],t:270,arms:[[90,40],[90,40]],legs:[[90,90],[90,90]]}],props:[["floor",79],["box",44,76,5,3],["box",96,4,5,3],["band","0.h1",[46,77]],["band","1.h1",[98,7]],["arrow",48,42,48,29],["arrow",104,28,104,41]]}
 };
@@ -484,7 +486,7 @@ function build(w,i,express,longV){
   }
 
   if (k==="A"){
-    note="Règle du cou : aucun à-coup, jamais jusqu'à l'échec.";
+    note="Règle du cou : aucun à-coup, jamais jusqu'à l'échec. Les trois derniers exercices sont un bonus pour les bras et les épaules : 10 minutes de plus si tu as le temps.";
     add("Échauffement","Rotations lentes de la tête, inclinaisons, 10 rétractions du menton, cercles d'épaules.",[W("Échauffement",120)]);
     if (testW){ tests=["planche","latG","latD","couG","couD"]; testsAt=B.length; }
     if (p==="p1"){
@@ -524,6 +526,12 @@ function build(w,i,express,longV){
       add("Gainage · circuit sans pause","Planche 45 s, latérale 30 s par côté, creux 30 s, anti-rotation 10 par côté. "+pl(m,"tour","tours")+", 1 minute entre les tours.", sg,"planche");
     } else {
       add("Gainage · un tour","Planche 45 s, latérale 30 s par côté, creux 30 s. Sans aller au bout.",[W("Planche",45),W("Latérale gauche",30),W("Latérale droite",30),W("Creux, genoux fléchis",30)],"planche");
+    }
+    if (p!=="aff"){
+      var AU={p1:[2,"12 à 15"],p2:[3,"10 à 12"],p3:[3,"10 à 12"],p4:[2,"10 à 12"]}[p], ar=S(AU[0])+" × "+AU[1];
+      add("Bonus · biceps à la poulie basse","Facultatif. Coudes collés au corps, tu montes les mains vers les épaules, descente en 3 secondes. "+ar+".","bitri");
+      add("Bonus · triceps à la poulie haute","Facultatif. Coudes collés au corps, tu tends les bras vers le bas, 1 seconde serrée. "+ar+".","bitri");
+      add("Bonus · élévations latérales","Facultatif. Tes petits haltères, bras presque tendus : tu montes jusqu'à l'horizontale, descente en 3 secondes. "+ar+".","lat");
     }
     hip();
   }
