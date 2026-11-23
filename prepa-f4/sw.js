@@ -1,5 +1,5 @@
 /* Prépa F4 2027 : cache hors ligne. Changer VERSION à chaque mise à jour des fichiers. */
-const VERSION = "prepa-f4-2026-11-23c";
+const VERSION = "prepa-f4-2026-11-23d";
 const ASSETS = [
   "./", "./index.html", "./manifest.webmanifest",
   "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png", "./icons/apple-touch-icon.png",

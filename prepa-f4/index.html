@@ -295,7 +295,7 @@ var TESTS = [
   {id:"couD",     n:"Maintien du cou, côté droit",   u:"s",   s:"A", sw:1, p:"Même protocole de l'autre côté."},
   {id:"chaise",   n:"Chaise, jambe gauche",          u:"s",   s:"C", sw:1, p:"Dos au mur, cuisse horizontale, temps maximal."},
   {id:"halteres", n:"Tenue à la poulie basse",       u:"s",   s:"C", sw:1, p:"Poignée basse dans la main gauche, toujours la même charge. Temps maximal."},
-  {id:"cardio",   n:"Cardio 12 minutes",             u:"km",  s:"B", step:"0.1", p:"Distance sur vélo ou tapis, même appareil, même réglage."},
+  {id:"cardio",   n:"Cardio 12 minutes",             u:"km",  s:"B", step:"0.1", p:"Distance sur le vélo, même réglage à chaque fois."},
   {id:"batak",    n:"Batak 60 s",                    u:"pts", s:"D", p:"Score en mode normal."},
   {id:"regul",    n:"Régularité au simulateur",      u:"s",   s:"D", step:"0.01", lower:1, p:"10 tours de suite à Dijon : écart entre le meilleur et le moins bon tour."},
   {id:"poids",    n:"Poids",                         u:"kg",  s:"",  step:"0.1", neutral:1, p:"Le matin, à jeun, même balance."},
@@ -402,6 +402,10 @@ var ILL={
     figs:[{hip:[44,44],t:340,arms:[[90,90],[90,90]],legs:[[80,95],[80,95]]}],props:[["floor",79],["box",104,68,6,10],["band","h1",[104,73]],["arrow",36,44,23,44]]},
   ctenue:{how:"Debout à côté de la machine, la poignée basse dans une main, charge lourde, bras le long du corps. Tu serres et tu tiens, épaules basses.",
     figs:[],props:[["floor",79]].concat(FRONT,[["line",[56,25],[48,47],"nb"],["line",[64,25],[73,47],"nb"],["circ",[60,12],5.5,"hd"],["box",98,72,7,6],["band",[73,48],[99,74]],["circ",[73,49],2.8,"hd"]])},
+  squatx:{how:"Pieds largeur d'épaules, bras devant. Tu descends lentement, puis tu remontes d'un coup, le plus vite possible, en finissant sur la pointe des pieds. Les pieds ne quittent pas le sol.",
+    figs:[{hip:[26,46],t:270,arms:[[60,20],[60,20]],legs:[[90,90],[90,90]]},{hip:[80,62],t:285,arms:[[30,350],[30,350]],legs:[[355,105],[355,105]]}],props:[["floor",79],["dbl",54,34,54,56]]},
+  pistol:{how:"Dos à une chaise, en appui sur une jambe, l'autre tendue devant. Tu t'assois lentement sans te laisser tomber, puis tu te relèves en poussant sur la même jambe.",
+    figs:[{hip:[50,62],t:285,arms:[[20,10],[20,10]],legs:[[355,100],[10,15]]}],props:[["floor",79],["box",32,65,24,4],["line",[36,69],[36,79]],["line",[54,69],[54,79]],["line",[33,65],[30,40]],["dbl",98,40,98,62]]},
   saut:{how:"Tu descends en squat, bras en arrière, puis tu sautes le plus haut possible en lançant les bras. Réception sur l'avant du pied, genoux souples, et tu te replaces avant le saut suivant.",
     figs:[{hip:[28,62],t:292,arms:[[130,110],[130,110]],legs:[[355,105],[355,105]]},{hip:[86,42],t:270,arms:[[320,320],[220,220,"n"]],legs:[[60,120],[72,112,"n"]]}],props:[["floor",79],["arrow",56,62,56,34]]},
   fente:{how:"Debout, mains libres ou sac à dos chargé. Tu recules une jambe, tu descends droit jusqu'à frôler le sol du genou arrière, puis tu repousses sur la jambe avant pour revenir.",
@@ -526,7 +530,7 @@ function build(w,i,express,longV){
 
   else if (k==="B"){
     note="Effort au ressenti : 7/10, des phrases courtes · 8/10, quelques mots · 9/10, plus un mot.";
-    add("Échauffement","5 minutes en montant progressivement. Vélo ou tapis, au choix.",[W("Échauffement",300)]);
+    add("Échauffement","5 minutes en montant progressivement, sur le vélo. Le tapis seulement en marche rapide : sous 2 m de plafond, on ne court pas.",[W("Échauffement",300)]);
     if (testW){
       add("Test · 12 minutes","Distance maximale, même appareil et même réglage à chaque test."+(w===1?" Aujourd'hui : à 8/10, sans aller au bout.":""),[W("Test 12 minutes",720)]);
       tests=["cardio"]; testsAt=B.length;
@@ -551,11 +555,11 @@ function build(w,i,express,longV){
   else if (k==="C" || k==="F" || k==="E"){
     var U={p1:[2,"12 à 15"],p2:[3,"10 à 12"],p3:[3,"8 à 10"],p4:[3,"8 à 10"],aff:[1,"10, léger"]}[p], un=S(U[0]), sr=un+" × "+U[1];
     note="Pour prendre de la masse : chaque série s'arrête à 1 ou 2 répétitions de l'échec, descente en 3 secondes, 60 à 75 secondes de repos. Dès que tu atteins le haut de la fourchette sur toutes les séries, tu montes la charge. La machine et le poids du corps font le travail : tes petits haltères ne servent qu'au volant. Côté gauche en premier."+(k==="E"?" Le dimanche est aussi le créneau de rattrapage.":"");
-    add("Échauffement","3 minutes de corde à sauter ou de vélo, puis une série légère du premier exercice.",[W("Échauffement",180)]);
+    add("Échauffement","3 minutes de vélo ou de montées de genoux sur place, puis une série légère du premier exercice.",[W("Échauffement",180)]);
     if (p!=="aff"){
       if (k==="C"){
-        if (p==="p1") add("Vivacité · corde rapide","Corde à sauter le plus vite possible : "+S(4)+" × 10 s, 30 s de repos. Tu restes frais : on cherche la vitesse, pas la fatigue.", reps(S(4),10,30,"Corde rapide"));
-        else add("Vivacité · squat sauté","Sans charge : "+S(3)+" × 5 sauts, le plus haut possible, réception souple et silencieuse. 45 s de repos. On cherche la vitesse, pas la fatigue.","saut");
+        if (p==="p1") add("Vivacité · genoux rapides","Montées de genoux sur place, le plus vite possible : "+S(4)+" × 10 s, 30 s de repos. Tu restes frais : on cherche la vitesse, pas la fatigue.", reps(S(4),10,30,"Genoux rapides"));
+        else add("Vivacité · squat explosif","Sans charge et sans décoller, plafond oblige : tu descends en 2 secondes, tu remontes le plus vite possible jusque sur la pointe des pieds. "+S(3)+" × 6, 45 s de repos.","squatx");
       } else if (k==="F"){
         add("Vivacité · pompes rapides",(p==="p1"?"Tu descends lentement, tu remontes le plus vite possible":"Pompes explosives : les mains décollent du sol en haut")+". "+S(3)+" × 5, 45 s de repos. Sur les genoux si besoin.","pompes");
       } else {
@@ -587,7 +591,7 @@ function build(w,i,express,longV){
       add("Tenue à la poulie basse","Debout à côté de la machine, poignée basse dans une main, charge lourde : tu serres et tu tiens. "+S(2)+" × "+TE+" s par main.", both(S(2),TE,15,"Tenue"),"ctenue");
       add("Vision entre les séries","Pendant chaque récupération : près-loin, ou balayage entre deux repères sur le mur. 30 secondes à chaque fois.");
     } else {
-      add("Montée sur banc","Un pied sur un banc ou une chaise solide, tu montes en poussant sur cette jambe, tu redescends en 3 secondes. "+sr+" par jambe. Poids du corps d'abord, puis un sac à dos chargé.","stepup");
+      add("Squat sur une jambe vers une chaise","Debout devant une chaise, sur une jambe : tu t'assois en 3 secondes, tu te relèves sur la même jambe. "+sr+" par jambe. Une main en appui au début, puis sans, puis avec un sac à dos chargé.","pistol");
       add("Extension de jambe","Au poste jambes de la machine, une jambe à la fois. "+sr+" par jambe.","legext");
       add("Soulevé de terre jambes tendues, à la poulie basse","Face à la machine, barre basse dans les mains, dos plat : tu recules les fesses, puis tu remontes en serrant les fessiers. "+sr+".","crdl");
       add("Pompes, pieds surélevés","Pieds sur une chaise dès que 12 pompes classiques passent. "+pl(un,"série","séries")+" à 1 ou 2 répétitions de l'échec.","pompes");
@@ -811,7 +815,8 @@ function viewReperes(){
   h+='<section class="card"><h2>Les choix du plan</h2><ul class="list">'+
      '<li><b>Plus costaud</b> : trois séances de force par semaine, sur ta machine (jusqu\'à 50 kg), au poids du corps et avec un sac à dos chargé. Cuisses le mercredi et le dimanche, dos le mercredi, le vendredi et le dimanche, pectoraux le vendredi et le dimanche.</li>'+
      '<li><b>Le volume fait le muscle</b> : environ 10 séries par groupe et par semaine en phase 1, 15 ensuite. La charge monte dès que tu atteins le haut de la fourchette.</li>'+
-     '<li><b>Plus vif, plus rapide</b> : un bloc de vivacité de 3 minutes en tête de chaque séance de force, quand tu es frais. Sauts, pompes rapides, sprints de 8 secondes. Peu de répétitions, vitesse maximale.</li>'+
+     '<li><b>Plus vif, plus rapide</b> : un bloc de vivacité de 3 minutes en tête de chaque séance de force, quand tu es frais. Genoux rapides, squat explosif, pompes rapides, sprints de 8 secondes sur le vélo. Peu de répétitions, vitesse maximale.</li>'+
+     '<li><b>Sous 2 m de plafond</b> : aucun saut, pas de corde à sauter, pas de montée sur un banc, et le tapis en marche seulement.</li>'+
      '<li><b>Sans assez manger ni dormir, pas de masse</b> : le détail est dans « Manger », plus bas.</li>'+
      '<li><b>Phase 1 plafonnée</b> : deux séries par exercice et 7/10 au cardio. On reconstruit avant de charger.</li></ul></section>';
 
