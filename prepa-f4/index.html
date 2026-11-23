@@ -278,15 +278,15 @@ var PH = {
   p4:["Phase 4","Intensité course"], aff:["Affûtage","Moins de volume, même intensité"], sai:["En saison","Entretien entre deux meetings"]
 };
 var SLOTS = [
-  {k:"A",  c:"A", t:"Cou + gainage",                          dur:"20 min",      a:"6 h, avant le bureau",        b:"21 h"},
-  {k:"B",  c:"B", t:"Cardio fractionné",                      dur:"25 min",      a:"6 h, avant le bureau",        b:"21 h"},
-  {k:"C",  c:"C", t:"Force pilote + freinage",                dur:"25 à 30 min", a:"12 h 30, à la maison",        b:"17 h au plus tard, tennis à 20 h 30"},
-  {k:"m1", c:"m", t:"Micro-séance : cou + vision",            dur:"10 min",      a:"12 h 30 au bureau",           b:"21 h"},
-  {k:"m2", c:"m", t:"Micro-séance : cou + vision + mobilité", dur:"10 min",      a:"dans la journée, à la maison", b:"avant le tennis"},
-  {k:"D",  c:"D", t:"Simulateur physique",                    dur:"30 à 40 min", a:"8 h, ou à tes heures de course", b:"21 h"},
-  {k:"E",  c:"E", t:"Force 2 + endurance douce",              dur:"45 min",      a:"9 h 30",                      b:"l'après-midi"}
+  {k:"A",  c:"A", t:"Cou + gainage",                     dur:"20 min",       a:"6 h, avant le bureau",        b:"21 h"},
+  {k:"B",  c:"B", t:"Cardio fractionné",                 dur:"25 min",       a:"6 h, avant le bureau",        b:"21 h"},
+  {k:"C",  c:"C", t:"Force · cuisses + dos",             dur:"40 min",       a:"12 h 30, à la maison",        b:"17 h au plus tard, tennis à 20 h 30"},
+  {k:"m1", c:"m", t:"Micro-séance : cou + vision",       dur:"10 min",       a:"12 h 30 au bureau",           b:"21 h"},
+  {k:"F",  c:"F", t:"Force · pectoraux + dos",           dur:"35 à 40 min",  a:"12 h 30, à la maison",        b:"17 h au plus tard, tennis à 20 h 30"},
+  {k:"D",  c:"D", t:"Simulateur physique",               dur:"30 à 40 min",  a:"8 h, ou à tes heures de course", b:"21 h"},
+  {k:"E",  c:"E", t:"Force · complet + endurance douce", dur:"45 à 50 min",  a:"9 h 30",                      b:"l'après-midi"}
 ];
-var PRIO = ["A","C","B","E","D","m1","m2"];
+var PRIO = ["A","C","E","F","B","D","m1"];
 var TESTS = [
   {id:"planche",  n:"Planche ventrale",              u:"s",   s:"A", sw:1, p:"Temps maximal, corps aligné."},
   {id:"latG",     n:"Planche latérale gauche",       u:"s",   s:"A", sw:1, p:"Temps maximal."},
@@ -393,6 +393,18 @@ var ILL={
     figs:[{hip:[44,46],t:355,arms:[[200,90],[90,90]],legs:[[100,85],[95,90]]}],props:[["floor",79],["box",58,69,44,5],["db","h1","h"],["arrow",47,62,47,51]]},
   ohp:{how:"Debout ou assis, haltères à hauteur d'épaules. Tu pousses au-dessus de la tête sans cambrer.",
     figs:[],props:[["floor",79]].concat(FRONT,[["line",[56,25],[45,31],"nb"],["line",[45,31],[45,17],"nb"],["line",[64,25],[75,31],"nb"],["line",[75,31],[75,17],"nb"],["circ",[60,12],5.5,"hd"],["db",[45,14],"h"],["db",[75,14],"h"],["arrow",31,28,31,14],["arrow",89,28,89,14]])},
+  saut:{how:"Tu descends en squat, bras en arrière, puis tu sautes le plus haut possible en lançant les bras. Réception sur l'avant du pied, genoux souples, et tu te replaces avant le saut suivant.",
+    figs:[{hip:[28,62],t:292,arms:[[130,110],[130,110]],legs:[[355,105],[355,105]]},{hip:[86,42],t:270,arms:[[320,320],[220,220,"n"]],legs:[[60,120],[72,112,"n"]]}],props:[["floor",79],["arrow",56,62,56,34]]},
+  fente:{how:"Debout, un haltère dans chaque main. Tu recules une jambe, tu descends droit jusqu'à frôler le sol du genou arrière, puis tu repousses sur la jambe avant pour revenir.",
+    figs:[{hip:[56,60],t:270,arms:[[90,90],[90,90]],legs:[[355,90],[100,172,"n"]]}],props:[["floor",79],["db","h1","h"],["dbl",92,40,92,60]]},
+  legext:{how:"Assis au poste jambes, le coussin sur le bas du tibia. Tu tends la jambe jusqu'à l'horizontale, tu tiens 1 seconde, tu redescends lentement.",
+    figs:[{hip:[40,54],t:262,arms:[[100,80],[100,80]],legs:[[0,340],[0,90]]}],props:[["floor",79],["box",28,57,28,5],["line",[28,57],[24,30]],["circ",[70,53],3,"eq"],["arrow",63,70,76,60]]},
+  stepup:{how:"Un pied posé à plat sur le banc. Tu montes en poussant sur cette jambe seulement, sans élan de l'autre, puis tu redescends en 3 secondes.",
+    figs:[{hip:[52,43],t:280,arms:[[90,90],[90,90]],legs:[[20,95],[95,100]]}],props:[["floor",79],["box",58,64,34,15],["db","h1","h"],["arrow",30,60,30,44]]},
+  pullover:{how:"Debout face à la poulie haute, buste un peu penché, bras presque tendus. Tu ramènes la barre jusqu'aux cuisses en arc de cercle, sans plier les coudes.",
+    figs:[{hip:[40,46],t:275,arms:[[20,20],[20,20]],legs:[[90,90],[90,90]]}],props:[["floor",79],["box",102,3,6,4],["band","h1",[104,7]],["arrow",72,36,62,50]]},
+  ecarte:{how:"Vu de dessus : allongé, haltères au-dessus de la poitrine, coudes à peine fléchis. Tu ouvres les bras jusqu'à sentir l'étirement, puis tu refermes comme pour serrer un tronc d'arbre.",
+    figs:[],props:[["line",[60,28],[60,56],"nb",12],["line",[60,58],[55,78],"nb"],["line",[60,58],[65,78],"nb"],["line",[55,31],[32,33],"nb"],["line",[65,31],[88,33],"nb"],["circ",[60,17],6,"hd"],["db",[30,33],"v"],["db",[90,33],"v"],["arrow",30,22,45,17],["arrow",90,22,75,17],["txt",25,79,"vue de dessus"]]},
   bitri:{how:"Biceps, à gauche : poulie basse, coudes collés au corps, tu montes les mains vers les épaules. Triceps, à droite : poulie haute, coudes collés, tu tends les bras vers le bas.",
     figs:[{hip:[30,46],t:270,arms:[[90,330],[90,330]],legs:[[90,90],[90,90]]},{hip:[84,46],t:270,arms:[[90,40],[90,40]],legs:[[90,90],[90,90]]}],props:[["floor",79],["box",44,76,5,3],["box",96,4,5,3],["band","0.h1",[46,77]],["band","1.h1",[98,7]],["arrow",48,42,48,29],["arrow",104,28,104,41]]}
 };
@@ -431,12 +443,12 @@ function build(w,i,express,longV){
   var slot=SLOTS[i], k=slot.k, rw=raceWeek(), ph=phaseOf(w), p=(ph==="sai")?"p4":ph;
   var deload=DELOAD.indexOf(w)>=0, testW=TESTW.indexOf(w)>=0;
   var half=!!express || deload || (testW && (k==="A"||k==="C"));
-  var lng=!!longV && !half && (k==="C"||k==="E") && w>=3 && ph!=="aff" && !(w===rw && i>=2);
+  var lng=!!longV && !half && (k==="C"||k==="F"||k==="E") && w>=3 && ph!=="aff" && !(w===rw && i>=2);
   function S(n){ return half ? Math.max(1,Math.ceil(n/2)) : (lng ? n+1 : n); }
   var B=[], tests=[], testsAt=-1, title=slot.t, dur=slot.dur, special=null, note="", fields=[];
   function add(t,d,steps,ill){ if (typeof steps==="string"){ ill=steps; steps=null; } B.push({t:t,d:d,steps:steps||null,ill:ill||null}); }
   function hip(){ add("Hanches · étirement de l'avant","Fente basse, genou arrière au sol, fessier serré : tu étires l'avant de la hanche sans cambrer. "+S(2)+" × 30 s par côté. Une tension, jamais une douleur.", both(S(2),30,5,"Avant de la hanche"),"hanche"); }
-  function out(){ if (lng) dur="40 à 45 min"; return {slot:slot,k:k,w:w,i:i,lng:lng,title:title,dur:dur,blocks:B,tests:tests,testsAt:testsAt,half:half,deload:deload,testW:testW,special:special,note:note,phase:ph,fields:fields}; }
+  function out(){ if (lng) dur="10 minutes de plus"; return {slot:slot,k:k,w:w,i:i,lng:lng,title:title,dur:dur,blocks:B,tests:tests,testsAt:testsAt,half:half,deload:deload,testW:testW,special:special,note:note,phase:ph,fields:fields}; }
 
   if (w===rw && i>=4){
     special="race"; title="Meeting de Dijon"; dur="";
@@ -527,27 +539,54 @@ function build(w,i,express,longV){
     add("Retour au calme","3 minutes très faciles.",[W("Retour au calme",180)]);
   }
 
-  else if (k==="C"){
-    note="Pour prendre du muscle : la dernière série se termine avec 1 ou 2 répétitions en réserve, et dès que toutes les répétitions passent, tu montes la charge. Côté gauche en premier, une série de plus à gauche sur les exercices à un seul membre.";
-    add("Échauffement","3 minutes de corde à sauter ou de vélo, puis 10 squats sans charge.",[W("Échauffement",180)]);
-    if (testW){ tests=["chaise","halteres"]; testsAt=B.length; }
-    var T={
-      p1:{sq:[2,"12"],fr:[2,8],ch:[3,20],ti:[2,"12"],po:[2,"deux de moins que ton maximum"],vo:[2,30],te:[2,30],fp:[2,"15"]},
-      p2:{sq:[3,"10"],fr:[3,8],ch:[3,30],ti:[3,"10"],po:[3,"une de moins que ton maximum"],vo:[3,40],te:[3,40],fp:[2,"15"]},
-      p3:{sq:[3,"8, plus lourd"],fr:[4,8],ch:[3,40],ti:[3,"8"],po:[3,"descente en 3 secondes"],vo:[3,50],te:[3,45],fp:[3,"15"]},
-      p4:{sq:[3,"8"],fr:[4,10],ch:[2,45],ti:[2,"10"],po:[2,"une de moins que ton maximum"],vo:[3,60],te:[2,45],fp:[2,"15"]},
-      aff:{sq:[1,"10, léger"],fr:[2,8],ch:[1,30],ti:[1,"10"],po:[1,"la moitié de ton maximum"],vo:[1,40],te:[1,30],fp:[1,"15"]}
-    }[p];
-    add("Squat gobelet","Haltère tenu contre la poitrine. "+S(T.sq[0])+" × "+T.sq[1]+".","squat");
-    var fn=S(T.fr[0]), fr=T.fr[1], fs=[], vary=(p==="p4");
-    for (var s=1;s<=fn;s++){ for (var r=1;r<=fr;r++){ var rel=vary?[2,3,4][(r-1)%3]:4; fs.push(W("Attaque et tiens · "+r+"/"+fr,2),W("Relâche sur "+rel+" s",rel),R(3,"Replace le pied")); } if (s<fn) fs.push(R(30,"Repos · série "+(s+1)+"/"+fn+" ensuite")); }
-    add("Freinage jambe gauche · attaque – relâche","Assis, pied gauche sur le poste jambes de la machine, ou contre un élastique solide. Tu pousses fort d'un coup, tu tiens 2 s, tu relâches régulièrement sur "+(vary?"2, 3 ou 4 s selon le signal":"4 s")+". "+fn+" × "+fr+"."+(p==="p3"?" Deux séries juste après 1 minute de corde à sauter : c'est fatigué que le dégressif se perd.":""), fs,"frein");
-    add("Chaise contre le mur, jambe gauche","Cuisse horizontale, sur deux jambes au début si besoin. "+S(T.ch[0])+" × "+T.ch[1]+" s.", reps(S(T.ch[0]),T.ch[1],30,"Chaise jambe gauche"),"chaise");
-    add("Tirage horizontal à la poulie", S(T.ti[0])+" × "+T.ti[1]+". Omoplates serrées en fin de mouvement.","row");
-    add("Pompes", pl(S(T.po[0]),"série","séries")+", "+T.po[1]+".","pompes");
-    add("Volant","Haltère tenu à deux mains devant toi, coudes fléchis, rotations gauche-droite comme dans une épingle. "+S(T.vo[0])+" × "+T.vo[1]+" s.", reps(S(T.vo[0]),T.vo[1],20,"Volant"),"volant");
-    add("Tenue d'haltères lourds","Bras le long du corps, tu serres. "+S(T.te[0])+" × "+T.te[1]+" s.", reps(S(T.te[0]),T.te[1],30,"Tenue d'haltères"),"tenue");
-    add("Tirage visage à l'élastique", S(T.fp[0])+" × "+T.fp[1]+".","facepull");
+  else if (k==="C" || k==="F" || k==="E"){
+    var U={p1:[2,"12 à 15"],p2:[3,"10 à 12"],p3:[3,"8 à 10"],p4:[3,"8 à 10"],aff:[1,"10, léger"]}[p], un=S(U[0]), sr=un+" × "+U[1];
+    note="Pour prendre de la masse : chaque série s'arrête à 1 ou 2 répétitions de l'échec, descente en 3 secondes, 60 à 75 secondes de repos. Dès que tu atteins le haut de la fourchette sur toutes les séries, tu montes la charge. Côté gauche en premier."+(k==="E"?" Le dimanche est aussi le créneau de rattrapage.":"");
+    add("Échauffement","3 minutes de corde à sauter ou de vélo, puis une série légère du premier exercice.",[W("Échauffement",180)]);
+    if (p!=="aff"){
+      if (k==="C"){
+        if (p==="p1") add("Vivacité · corde rapide","Corde à sauter le plus vite possible : "+S(4)+" × 10 s, 30 s de repos. Tu restes frais : on cherche la vitesse, pas la fatigue.", reps(S(4),10,30,"Corde rapide"));
+        else add("Vivacité · squat sauté","Sans charge : "+S(3)+" × 5 sauts, le plus haut possible, réception souple et silencieuse. 45 s de repos. On cherche la vitesse, pas la fatigue.","saut");
+      } else if (k==="F"){
+        add("Vivacité · pompes rapides",(p==="p1"?"Tu descends lentement, tu remontes le plus vite possible":"Pompes explosives : les mains décollent du sol en haut")+". "+S(3)+" × 5, 45 s de repos. Sur les genoux si besoin.","pompes");
+      } else {
+        var sp=S(p==="p1"?4:6); add("Vivacité · sprints sur le vélo", sp+" × 8 s à fond, 50 s très faciles entre chaque. Assis, résistance moyenne.", reps(sp,8,50,"Sprint","Très facile"));
+      }
+    }
+    if (k==="C"){
+      if (testW){ tests=["chaise","halteres"]; testsAt=B.length; }
+      add("Squat gobelet","Haltère contre la poitrine, descente en 3 secondes. "+sr+". Si la charge manque : 2 secondes d'arrêt en bas.","squat");
+      add("Fente arrière, haltères","Un grand pas en arrière, le genou arrière frôle le sol, puis tu repousses sur la jambe avant. "+sr+" par jambe. Si l'avant de la hanche tire, réduis l'amplitude.","fente");
+      add("Extension de jambe","Au poste jambes de la machine, une jambe à la fois, 1 seconde d'arrêt jambe tendue. "+sr+" par jambe.","legext");
+      add("Tirage vertical à la poulie haute", sr+". Coudes vers les hanches, poitrine sortie.","pulldown");
+      add("Tirage horizontal à la poulie", sr+". Omoplates serrées 1 seconde en fin de mouvement.","row");
+      var FR={p1:[2,8],p2:[3,8],p3:[4,8],p4:[4,10],aff:[2,8]}[p], fn=S(FR[0]), fr=FR[1], fs=[], vary=(p==="p4");
+      for (var s=1;s<=fn;s++){ for (var r=1;r<=fr;r++){ var rel=vary?[2,3,4][(r-1)%3]:4; fs.push(W("Attaque et tiens · "+r+"/"+fr,2),W("Relâche sur "+rel+" s",rel),R(3,"Replace le pied")); } if (s<fn) fs.push(R(30,"Repos · série "+(s+1)+"/"+fn+" ensuite")); }
+      add("Freinage jambe gauche · attaque – relâche","Assis, pied gauche sur le poste jambes de la machine, ou contre un élastique solide. Tu pousses fort d'un coup, tu tiens 2 s, tu relâches régulièrement sur "+(vary?"2, 3 ou 4 s selon le signal":"4 s")+". "+fn+" × "+fr+"."+(p==="p3"?" C'est fatigué que le dégressif se perd : garde cet exercice en fin de séance.":""), fs,"frein");
+      var CH={p1:20,p2:30,p3:40,p4:45,aff:30}[p], cn=S(2);
+      add("Chaise contre le mur, jambe gauche","Cuisse horizontale, sur deux jambes au début si besoin. "+cn+" × "+CH+" s.", reps(cn,CH,30,"Chaise jambe gauche"),"chaise");
+    } else if (k==="F"){
+      var VO={p1:30,p2:40,p3:50,p4:60,aff:40}[p], TE={p1:30,p2:40,p3:45,p4:45,aff:30}[p];
+      add("Cou · isométrie","Main contre tête, quatre directions, "+S(2)+" × 10 s.", neckIso(S(2)),"couiso");
+      add("Développé haltères","Allongé au sol ou sur un banc. "+sr+".","floorpress");
+      add("Pompes", pl(un,"série","séries")+", en t'arrêtant à 1 ou 2 répétitions de l'échec. Pieds surélevés quand tu dépasses 15 répétitions.","pompes");
+      add("Écarté","Allongé, haltères au-dessus de la poitrine, coudes à peine fléchis : tu ouvres les bras, puis tu refermes. Ou le butterfly de la machine, si elle en a un. "+sr+".","ecarte");
+      add("Rowing haltère à un bras","Gauche d'abord. "+sr+" par bras.","row1");
+      add("Tirage bras tendus à la poulie haute","Debout face à la poulie, bras presque tendus : tu ramènes la barre jusqu'aux cuisses. "+sr+".","pullover");
+      add("Tirage visage à l'élastique", S(2)+" × 15.","facepull");
+      add("Volant","Haltère tenu à deux mains devant toi, coudes fléchis, rotations gauche-droite comme dans une épingle. "+S(2)+" × "+VO+" s.", reps(S(2),VO,20,"Volant"),"volant");
+      add("Tenue d'haltères lourds","Bras le long du corps, tu serres. "+S(2)+" × "+TE+" s.", reps(S(2),TE,30,"Tenue d'haltères"),"tenue");
+      add("Vision entre les séries","Pendant chaque récupération : près-loin, ou balayage entre deux repères sur le mur. 30 secondes à chaque fois.");
+    } else {
+      add("Montée sur banc, haltères","Un pied sur le banc, tu montes en poussant sur cette jambe, tu redescends en 3 secondes. "+sr+" par jambe.","stepup");
+      add("Extension de jambe","Au poste jambes de la machine, une jambe à la fois. "+sr+" par jambe.","legext");
+      add("Soulevé de terre jambes tendues, haltères","Dos plat, tu pousses les hanches vers l'arrière. "+sr+".","rdl");
+      add("Pompes", pl(un,"série","séries")+", en t'arrêtant à 1 ou 2 répétitions de l'échec.","pompes");
+      add("Développé haltères","Allongé au sol ou sur un banc. "+sr+".","floorpress");
+      add("Tirage horizontal à la poulie", sr+".","row");
+      add("Tirage vertical à la poulie haute", sr+".","pulldown");
+      add("Endurance douce","Facultative : 15 à 20 minutes de marche rapide ou de vélo, à l'allure de la conversation. En famille si tu veux.");
+    }
     hip();
   }
 
@@ -565,28 +604,14 @@ function build(w,i,express,longV){
     else fields=[["best","Meilleur tour","text"],["gap","Écart sur 10 tours (s)","number"],["batak","Score Batak","number"]];
   }
 
-  else if (k==="E"){
-    note="Deuxième séance de force de la semaine, haut du corps et arrière de la hanche. Même règle de charge que mercredi. Le dimanche est aussi le créneau de rattrapage.";
-    add("Échauffement","3 minutes de corde à sauter ou de vélo, cercles d'épaules.",[W("Échauffement",180)]);
-    var U={p1:[2,"12"],p2:[3,"10"],p3:[3,"8"],p4:[3,"8"],aff:[1,"10, léger"]}[p], un=S(U[0]), ur=U[1];
-    add("Tirage vertical à la poulie haute", un+" × "+ur+". Coudes vers les hanches.","pulldown");
-    add("Développé haltères","Allongé au sol ou sur un banc. "+un+" × "+ur+".","floorpress");
-    add("Soulevé de terre jambes tendues, haltères","Dos plat, tu pousses les hanches vers l'arrière. "+un+" × "+ur+". Il renforce l'arrière de la hanche sans solliciter l'avant.","rdl");
-    add("Rowing haltère à un bras","Gauche d'abord. "+un+" × "+ur+" par bras, une série de plus à gauche.","row1");
-    add("Développé épaules, haltères", un+" × "+ur+".","ohp");
-    add("Biceps puis triceps à la poulie","Enchaînés sans pause. "+un+" × 12 chacun.","bitri");
-    add("Endurance douce",(p==="p1"||p==="aff"?"20 minutes":"20 à 30 minutes")+" de marche rapide, de vélo ou de footing lent, à l'allure de la conversation. En famille si tu veux.");
-    hip();
-  }
-
   else {
     note="Faisable au bureau, sans transpirer.";
     add("Cou · isométrie","Main contre tête, quatre directions, "+S(3)+" × 10 s.", neckIso(S(3)),"couiso");
     add("Vision · convergence","Un stylo à bout de bras, rapproché lentement du nez en gardant une seule image. 10 allers-retours.");
     add("Vision · balayage","Deux repères à 1 m d'écart sur un mur à 2 m. Le regard saute de l'un à l'autre le plus vite possible, tête immobile. 3 × 30 s : horizontal, vertical, diagonale.",[W("Balayage horizontal",30),R(10),W("Balayage vertical",30),R(10),W("Balayage en diagonale",30)]);
     add("Vision · près-loin","Un texte à 30 cm, un repère à plus de 5 m. Net sur l'un, puis sur l'autre. 20 alternances.");
+    add("Réflexes · lâcher de règle","Quelqu'un lâche une règle entre ton pouce et ton index, tu la pinces le plus vite possible : 10 essais par main. Seul : une balle lâchée de la main haute, rattrapée de la main basse.");
     add("Vision · périphérique","Fixe un point droit devant. Lance une balle de tennis contre le mur et rattrape-la sans quitter le point des yeux. 2 × 1 min.", reps(2,60,15,"Balle au mur"));
-    if (k==="m2"){ add("Mobilité","Rotations du haut du dos, poignets, hanches.",[W("Mobilité",120)]); hip(); }
   }
   return out();
 }
@@ -677,7 +702,7 @@ function viewSeance(){
   else if (b.testW && b.tests.length && (b.k==="A"||b.k==="C")) h+='<div class="row"><span class="pill best">Tests de départ d\'abord, puis la moitié des séries</span></div>';
   if (b.note) h+='<p class="note">'+esc(b.note)+'</p>';
   if (!b.special && !b.deload) h+='<label class="switch" for="express"><input type="checkbox" id="express"'+(ui.express?' checked':'')+'> Version express : moitié des séries, 12 minutes. Pour une nuit courte ou une soirée serrée.</label>';
-  if ((b.k==="C"||b.k==="E") && !b.special && !b.deload && !b.testW && w>=3 && b.phase!=="aff") h+='<label class="switch" for="long"><input type="checkbox" id="long"'+(ui.long?' checked':'')+'> Version longue : une série de plus par exercice, 40 à 45 minutes. Seulement si la semaine précédente est bien passée.</label>';
+  if ((b.k==="C"||b.k==="F"||b.k==="E") && !b.special && !b.deload && !b.testW && w>=3 && b.phase!=="aff") h+='<label class="switch" for="long"><input type="checkbox" id="long"'+(ui.long?' checked':'')+'> Version longue : une série de plus par exercice, environ 10 minutes de plus. Seulement si la semaine précédente est bien passée.</label>';
   var timed=0; b.blocks.forEach(function(bl){ if (bl.steps) timed+=stepsTotal(bl.steps); });
   if (timed) h+='<button type="button" class="btn primary wide" data-act="guide">Lancer la séance guidée</button>';
 
@@ -775,19 +800,21 @@ function standalone(){ try{ return typeof window!=="undefined" && (window.naviga
 function viewReperes(){
   var pos=nowPos(), rw=raceWeek(), h="";
   h+='<section class="card"><h2>Les choix du plan</h2><ul class="list">'+
-     '<li><b>Deux séances de force par semaine</b> : mercredi (jambes, freinage, avant-bras) et dimanche (haut du corps, arrière de la hanche).</li>'+
-     '<li><b>Des charges qui montent</b> dès que toutes les répétitions passent. Pas de sèche pendant ces mois : le détail est dans « Manger pour prendre du muscle », plus bas.</li>'+
-     '<li><b>Phase 1 plafonnée à 7/10</b> : on reconstruit avant de charger.</li></ul></section>';
+     '<li><b>Plus costaud</b> : trois séances de force par semaine. Cuisses le mercredi et le dimanche, dos le mercredi, le vendredi et le dimanche, pectoraux le vendredi et le dimanche.</li>'+
+     '<li><b>Le volume fait le muscle</b> : environ 10 séries par groupe et par semaine en phase 1, 15 ensuite. La charge monte dès que tu atteins le haut de la fourchette.</li>'+
+     '<li><b>Plus vif, plus rapide</b> : un bloc de vivacité de 3 minutes en tête de chaque séance de force, quand tu es frais. Sauts, pompes rapides, sprints de 8 secondes. Peu de répétitions, vitesse maximale.</li>'+
+     '<li><b>Sans assez manger ni dormir, pas de masse</b> : le détail est dans « Manger pour prendre du muscle », plus bas.</li>'+
+     '<li><b>Phase 1 plafonnée</b> : deux séries par exercice et 7/10 au cardio. On reconstruit avant de charger.</li></ul></section>';
 
   h+='<section class="card"><h2>Quand faire les séances</h2><p>Sur le papier, le meilleur moment pour la force est la fin d\'après-midi : on y est un peu plus fort que le matin. Mais sur plusieurs semaines, les progrès en force et en muscle sont comparables matin ou soir, et le corps s\'habitue à l\'heure où il s\'entraîne. Ce qui pèse le plus, c\'est que la séance ait lieu.</p><div class="slots">'+
      '<div class="slot"><b>Lun · mar</b><div>Jours de bureau : 6 h à la maison avant de partir, terminé à 6 h 30. Cou et gainage le lundi, cardio le mardi.<small>Plan B : 21 h le soir même, en version express.</small></div></div>'+
-     '<div class="slot"><b>Mercredi</b><div>À la maison : la force à 12 h 30. Tu es réveillé, tu déjeunes juste après, et il reste huit heures avant le tennis.<small>Pas après 17 h. Tennis à 20 h 30.</small></div></div>'+
+     '<div class="slot"><b>Mercredi</b><div>À la maison : la force à 12 h 30, cuisses et dos. Tu es réveillé, tu déjeunes juste après, et il reste huit heures avant le tennis.<small>Pas après 17 h. Tennis à 20 h 30.</small></div></div>'+
      '<div class="slot"><b>Jeudi</b><div>Jour de bureau : micro-séance à 12 h 30, 10 minutes sans transpirer.<small>Plan B : 21 h.</small></div></div>'+
-     '<div class="slot"><b>Vendredi</b><div>À la maison : micro-séance quand tu veux dans la journée.<small>Tennis à 20 h 30.</small></div></div>'+
+     '<div class="slot"><b>Vendredi</b><div>À la maison : la force à 12 h 30, pectoraux et dos.<small>Pas après 17 h. Tennis à 20 h 30.</small></div></div>'+
      '<div class="slot"><b>Samedi</b><div>8 h au simulateur.<small>Une fois sur deux, à 10 h ou à 16 h : tes heures de qualification et de course.</small></div></div>'+
      '<div class="slot"><b>Dimanche</b><div>9 h 30, après le petit-déjeuner : force, puis endurance douce.<small>C\'est aussi le créneau de rattrapage.</small></div></div>'+
      '<p class="note">Après une nuit trop courte, on ne se lève pas plus tôt pour autant : on passe au plan B. Le sommeil construit autant de muscle que la séance.</p>'+
-     '<h3>Et 45 minutes tous les jours ?</h3><p>Trop pour une reprise : le muscle se construit pendant la récupération, et tu joues déjà au tennis deux fois par semaine. La bonne dose, ce sont des séances courtes presque tous les jours et deux séances de force qui peuvent passer à 40 ou 45 minutes à partir de la semaine 3 : c\'est la « version longue » du mercredi et du dimanche.</p></section>';
+     '<h3>Et 45 minutes tous les jours ?</h3><p>Pas tous les jours : le muscle se construit pendant la récupération, et tu joues déjà au tennis deux fois par semaine. La bonne dose, ce sont trois séances de force de 35 à 50 minutes, le mercredi, le vendredi et le dimanche, et des séances courtes les autres jours.</p></section>';
 
   h+='<section class="card"><h2>Manger pour prendre du muscle</h2><ul class="list">'+
      '<li><b>Le repère</b> : au moins 1,6 g de protéines par kilo et par jour, en quatre prises. '+protLine()+'</li>'+
@@ -796,7 +823,7 @@ function viewReperes(){
      '<li><b>L\'énergie</b> : sans féculents, le muscle se construit mal. Parmi tes légumes, seuls le maïs et les petits pois en apportent.</li></ul>'+
      '<h3>Autour des séances</h3><ul class="list">'+
      '<li>Séance de 6 h : à jeun, ça passe pour 20 minutes. Le petit-déjeuner suit tout de suite, avec les œufs.</li>'+
-     '<li>Force du mercredi : à 12 h 30, le déjeuner juste après. Force du dimanche : après le petit-déjeuner. Dans les deux cas, des protéines au repas qui suit.</li>'+
+     '<li>Force du mercredi et du vendredi : à 12 h 30, le déjeuner juste après. Force du dimanche : après le petit-déjeuner. À chaque fois, des protéines au repas qui suit.</li>'+
      '<li>Soirs de tennis : dîner vers 19 h, une collation après si tu as faim.</li>'+
      '<li>Le total de la journée compte plus que la minute exacte.</li></ul>'+
      '<p class="meta">À compléter selon ce que tu manges en laitages et en féculents.</p></section>';
@@ -810,8 +837,8 @@ function viewReperes(){
   h+='<section class="card"><h2>Rattraper une séance</h2><ol class="list">'+
      '<li><b>Manquée le matin</b> : version express le soir même, vers 21 h, sauf mercredi et vendredi.</li>'+
      '<li><b>Sinon</b> : dans les 48 heures, ou le dimanche.</li>'+
-     '<li><b>Une seule séance rattrapée par jour</b>, et jamais deux séances dures le même jour (B et D, B et C, C et la force du dimanche).</li>'+
-     '<li><b>Si la semaine explose</b>, l\'ordre de priorité est A, C, B, puis la force du dimanche, puis D. La semaine plancher : A + C + B. Le tennis fait le reste.</li>'+
+     '<li><b>Une seule séance rattrapée par jour</b>, et jamais deux séances dures le même jour : pas deux séances de force, pas B avec D.</li>'+
+     '<li><b>Si la semaine explose</b>, l\'ordre de priorité est A, puis la force du mercredi, du dimanche et du vendredi, puis B, puis D. La semaine plancher : A et deux séances de force. Le tennis fait le reste.</li>'+
      '<li><b>Dimanche soir, la semaine est close.</b> La dette ne se reporte pas. Moins de quatre séances deux semaines de suite : tu refais la même semaine.</li>'+
      '<li><b>Nuit très courte</b> : version express, pas de fractionné dur. Épuisé : cou et vision seulement.</li></ol></section>';
 
@@ -824,6 +851,7 @@ function viewReperes(){
   h+='<section class="card"><h2>La vision</h2><ul class="list">'+
      '<li><b>L\'acuité ne se muscle pas</b> : elle se mesure et se corrige. Un contrôle chez l\'ophtalmologiste, ou un bilan chez un orthoptiste, avant la saison est le geste le plus rentable.</li>'+
      '<li><b>Ce qui se travaille</b> : la convergence, la vitesse de balayage, l\'attention périphérique, le temps de réaction.</li>'+
+     '<li><b>Où c\'est dans la semaine</b> : micro-séance du jeudi, entre les séries le vendredi, Batak avant le simulateur le samedi.</li>'+
      '<li><b>Niveau de preuve</b> : le transfert des exercices visuels généraux vers la performance réelle reste mal démontré. D\'où 5 minutes, pas plus, et l\'essentiel du travail du regard au simulateur.</li></ul></section>';
 
   h+='<section class="card"><h2>Alertes et réglages</h2><p>Cette appli suit, chronomètre et calcule ce qui reste à rattraper. Elle ne peut pas envoyer de notification : les alertes viennent de l\'application Rappels de ton téléphone.</p>'+
