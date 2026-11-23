@@ -294,11 +294,12 @@ var TESTS = [
   {id:"couG",     n:"Maintien du cou, côté gauche",  u:"s",   s:"A", sw:1, p:"Allongé sur le côté, tête dans le vide et alignée. Arrêt dès que la tête descend. Plafond 60 s en S1."},
   {id:"couD",     n:"Maintien du cou, côté droit",   u:"s",   s:"A", sw:1, p:"Même protocole de l'autre côté."},
   {id:"chaise",   n:"Chaise, jambe gauche",          u:"s",   s:"C", sw:1, p:"Dos au mur, cuisse horizontale, temps maximal."},
-  {id:"halteres", n:"Tenue d'haltères",              u:"s",   s:"C", sw:1, p:"Toujours la même charge. Temps maximal."},
+  {id:"halteres", n:"Tenue à la poulie basse",       u:"s",   s:"C", sw:1, p:"Poignée basse dans la main gauche, toujours la même charge. Temps maximal."},
   {id:"cardio",   n:"Cardio 12 minutes",             u:"km",  s:"B", step:"0.1", p:"Distance sur vélo ou tapis, même appareil, même réglage."},
   {id:"batak",    n:"Batak 60 s",                    u:"pts", s:"D", p:"Score en mode normal."},
   {id:"regul",    n:"Régularité au simulateur",      u:"s",   s:"D", step:"0.01", lower:1, p:"10 tours de suite à Dijon : écart entre le meilleur et le moins bon tour."},
-  {id:"poids",    n:"Poids",                         u:"kg",  s:"",  step:"0.1", neutral:1, p:"Le matin, à jeun, même balance."}
+  {id:"poids",    n:"Poids",                         u:"kg",  s:"",  step:"0.1", neutral:1, p:"Le matin, à jeun, même balance."},
+  {id:"taille",   n:"Tour de taille",                u:"cm",  s:"",  step:"0.5", neutral:1, p:"Au niveau du nombril, le matin, sans rentrer le ventre."}
 ];
 function testById(id){ for (var i=0;i<TESTS.length;i++) if (TESTS[i].id===id) return TESTS[i]; return null; }
 
@@ -393,14 +394,22 @@ var ILL={
     figs:[{hip:[44,46],t:355,arms:[[200,90],[90,90]],legs:[[100,85],[95,90]]}],props:[["floor",79],["box",58,69,44,5],["db","h1","h"],["arrow",47,62,47,51]]},
   ohp:{how:"Debout ou assis, haltères à hauteur d'épaules. Tu pousses au-dessus de la tête sans cambrer.",
     figs:[],props:[["floor",79]].concat(FRONT,[["line",[56,25],[45,31],"nb"],["line",[45,31],[45,17],"nb"],["line",[64,25],[75,31],"nb"],["line",[75,31],[75,17],"nb"],["circ",[60,12],5.5,"hd"],["db",[45,14],"h"],["db",[75,14],"h"],["arrow",31,28,31,14],["arrow",89,28,89,14]])},
+  csquat:{how:"Face à la machine, la poignée de la poulie basse tenue contre la poitrine, un pas en arrière pour tendre le câble. Tu descends les fesses en arrière, dos droit, talons au sol, puis tu repousses.",
+    figs:[{hip:[46,62],t:285,arms:[[80,300],[80,300]],legs:[[355,105],[355,105]]}],props:[["floor",79],["box",104,68,6,10],["band","h1",[104,73]],["dbl",22,40,22,62]]},
+  cfly:{how:"De profil, la poignée haute dans la main côté machine, bras presque tendu. Tu ramènes la main en arc de cercle jusque devant la hanche opposée et tu serres 1 seconde.",
+    figs:[],props:[["floor",79]].concat(FRONT,[["line",[56,25],[48,36],"nb"],["line",[48,36],[55,45],"nb"],["line",[64,25],[75,22],"nb"],["line",[75,22],[86,17],"nb"],["circ",[60,12],5.5,"hd"],["box",108,2,6,4],["band",[86,17],[109,5]],["arrow",86,27,68,47]])},
+  crdl:{how:"Face à la machine, la barre de la poulie basse dans les mains, genoux à peine fléchis. Tu recules les fesses, dos plat, puis tu remontes en serrant les fessiers.",
+    figs:[{hip:[44,44],t:340,arms:[[90,90],[90,90]],legs:[[80,95],[80,95]]}],props:[["floor",79],["box",104,68,6,10],["band","h1",[104,73]],["arrow",36,44,23,44]]},
+  ctenue:{how:"Debout à côté de la machine, la poignée basse dans une main, charge lourde, bras le long du corps. Tu serres et tu tiens, épaules basses.",
+    figs:[],props:[["floor",79]].concat(FRONT,[["line",[56,25],[48,47],"nb"],["line",[64,25],[73,47],"nb"],["circ",[60,12],5.5,"hd"],["box",98,72,7,6],["band",[73,48],[99,74]],["circ",[73,49],2.8,"hd"]])},
   saut:{how:"Tu descends en squat, bras en arrière, puis tu sautes le plus haut possible en lançant les bras. Réception sur l'avant du pied, genoux souples, et tu te replaces avant le saut suivant.",
     figs:[{hip:[28,62],t:292,arms:[[130,110],[130,110]],legs:[[355,105],[355,105]]},{hip:[86,42],t:270,arms:[[320,320],[220,220,"n"]],legs:[[60,120],[72,112,"n"]]}],props:[["floor",79],["arrow",56,62,56,34]]},
-  fente:{how:"Debout, un haltère dans chaque main. Tu recules une jambe, tu descends droit jusqu'à frôler le sol du genou arrière, puis tu repousses sur la jambe avant pour revenir.",
-    figs:[{hip:[56,60],t:270,arms:[[90,90],[90,90]],legs:[[355,90],[100,172,"n"]]}],props:[["floor",79],["db","h1","h"],["dbl",92,40,92,60]]},
+  fente:{how:"Debout, mains libres ou sac à dos chargé. Tu recules une jambe, tu descends droit jusqu'à frôler le sol du genou arrière, puis tu repousses sur la jambe avant pour revenir.",
+    figs:[{hip:[56,60],t:270,arms:[[90,90],[90,90]],legs:[[355,90],[100,172,"n"]]}],props:[["floor",79],["dbl",92,40,92,60]]},
   legext:{how:"Assis au poste jambes, le coussin sur le bas du tibia. Tu tends la jambe jusqu'à l'horizontale, tu tiens 1 seconde, tu redescends lentement.",
     figs:[{hip:[40,54],t:262,arms:[[100,80],[100,80]],legs:[[0,340],[0,90]]}],props:[["floor",79],["box",28,57,28,5],["line",[28,57],[24,30]],["circ",[70,53],3,"eq"],["arrow",63,70,76,60]]},
   stepup:{how:"Un pied posé à plat sur le banc. Tu montes en poussant sur cette jambe seulement, sans élan de l'autre, puis tu redescends en 3 secondes.",
-    figs:[{hip:[52,43],t:280,arms:[[90,90],[90,90]],legs:[[20,95],[95,100]]}],props:[["floor",79],["box",58,64,34,15],["db","h1","h"],["arrow",30,60,30,44]]},
+    figs:[{hip:[52,43],t:280,arms:[[90,90],[90,90]],legs:[[20,95],[95,100]]}],props:[["floor",79],["box",58,64,34,15],["arrow",30,60,30,44]]},
   pullover:{how:"Debout face à la poulie haute, buste un peu penché, bras presque tendus. Tu ramènes la barre jusqu'aux cuisses en arc de cercle, sans plier les coudes.",
     figs:[{hip:[40,46],t:275,arms:[[20,20],[20,20]],legs:[[90,90],[90,90]]}],props:[["floor",79],["box",102,3,6,4],["band","h1",[104,7]],["arrow",72,36,62,50]]},
   ecarte:{how:"Vu de dessus : allongé, haltères au-dessus de la poitrine, coudes à peine fléchis. Tu ouvres les bras jusqu'à sentir l'étirement, puis tu refermes comme pour serrer un tronc d'arbre.",
@@ -541,7 +550,7 @@ function build(w,i,express,longV){
 
   else if (k==="C" || k==="F" || k==="E"){
     var U={p1:[2,"12 à 15"],p2:[3,"10 à 12"],p3:[3,"8 à 10"],p4:[3,"8 à 10"],aff:[1,"10, léger"]}[p], un=S(U[0]), sr=un+" × "+U[1];
-    note="Pour prendre de la masse : chaque série s'arrête à 1 ou 2 répétitions de l'échec, descente en 3 secondes, 60 à 75 secondes de repos. Dès que tu atteins le haut de la fourchette sur toutes les séries, tu montes la charge. Côté gauche en premier."+(k==="E"?" Le dimanche est aussi le créneau de rattrapage.":"");
+    note="Pour prendre de la masse : chaque série s'arrête à 1 ou 2 répétitions de l'échec, descente en 3 secondes, 60 à 75 secondes de repos. Dès que tu atteins le haut de la fourchette sur toutes les séries, tu montes la charge. La machine et le poids du corps font le travail : tes petits haltères ne servent qu'au volant. Côté gauche en premier."+(k==="E"?" Le dimanche est aussi le créneau de rattrapage.":"");
     add("Échauffement","3 minutes de corde à sauter ou de vélo, puis une série légère du premier exercice.",[W("Échauffement",180)]);
     if (p!=="aff"){
       if (k==="C"){
@@ -555,11 +564,11 @@ function build(w,i,express,longV){
     }
     if (k==="C"){
       if (testW){ tests=["chaise","halteres"]; testsAt=B.length; }
-      add("Squat gobelet","Haltère contre la poitrine, descente en 3 secondes. "+sr+". Si la charge manque : 2 secondes d'arrêt en bas.","squat");
-      add("Fente arrière, haltères","Un grand pas en arrière, le genou arrière frôle le sol, puis tu repousses sur la jambe avant. "+sr+" par jambe. Si l'avant de la hanche tire, réduis l'amplitude.","fente");
+      add("Squat à la poulie basse","Face à la machine, poignée basse tenue contre la poitrine, descente en 3 secondes. "+sr+". Quand 15 répétitions passent à 50 kg : 2 secondes d'arrêt en bas.","csquat");
+      add("Fente arrière","Un grand pas en arrière, le genou arrière frôle le sol, puis tu repousses sur la jambe avant. "+sr+" par jambe. Poids du corps d'abord, puis un sac à dos chargé. Si l'avant de la hanche tire, réduis l'amplitude.","fente");
       add("Extension de jambe","Au poste jambes de la machine, une jambe à la fois, 1 seconde d'arrêt jambe tendue. "+sr+" par jambe.","legext");
       add("Tirage vertical à la poulie haute", sr+". Coudes vers les hanches, poitrine sortie.","pulldown");
-      add("Tirage horizontal à la poulie", sr+". Omoplates serrées 1 seconde en fin de mouvement.","row");
+      add("Tirage horizontal à la poulie basse", sr+". Omoplates serrées 1 seconde en fin de mouvement.","row");
       var FR={p1:[2,8],p2:[3,8],p3:[4,8],p4:[4,10],aff:[2,8]}[p], fn=S(FR[0]), fr=FR[1], fs=[], vary=(p==="p4");
       for (var s=1;s<=fn;s++){ for (var r=1;r<=fr;r++){ var rel=vary?[2,3,4][(r-1)%3]:4; fs.push(W("Attaque et tiens · "+r+"/"+fr,2),W("Relâche sur "+rel+" s",rel),R(3,"Replace le pied")); } if (s<fn) fs.push(R(30,"Repos · série "+(s+1)+"/"+fn+" ensuite")); }
       add("Freinage jambe gauche · attaque – relâche","Assis, pied gauche sur le poste jambes de la machine, ou contre un élastique solide. Tu pousses fort d'un coup, tu tiens 2 s, tu relâches régulièrement sur "+(vary?"2, 3 ou 4 s selon le signal":"4 s")+". "+fn+" × "+fr+"."+(p==="p3"?" C'est fatigué que le dégressif se perd : garde cet exercice en fin de séance.":""), fs,"frein");
@@ -568,22 +577,22 @@ function build(w,i,express,longV){
     } else if (k==="F"){
       var VO={p1:30,p2:40,p3:50,p4:60,aff:40}[p], TE={p1:30,p2:40,p3:45,p4:45,aff:30}[p];
       add("Cou · isométrie","Main contre tête, quatre directions, "+S(2)+" × 10 s.", neckIso(S(2)),"couiso");
-      add("Développé haltères","Allongé au sol ou sur un banc. "+sr+".","floorpress");
-      add("Pompes", pl(un,"série","séries")+", en t'arrêtant à 1 ou 2 répétitions de l'échec. Pieds surélevés quand tu dépasses 15 répétitions.","pompes");
-      add("Écarté","Allongé, haltères au-dessus de la poitrine, coudes à peine fléchis : tu ouvres les bras, puis tu refermes. Ou le butterfly de la machine, si elle en a un. "+sr+".","ecarte");
-      add("Rowing haltère à un bras","Gauche d'abord. "+sr+" par bras.","row1");
+      add("Pompes","Descente en 3 secondes. "+pl(un,"série","séries")+", en t'arrêtant à 1 ou 2 répétitions de l'échec. Au-delà de 15 : pieds surélevés, puis sac à dos chargé.","pompes");
+      add("Écarté à la poulie haute, un bras","De profil, poignée haute dans la main côté machine : tu ramènes la main en arc de cercle jusque devant la hanche opposée, tu serres 1 seconde. "+sr+" par bras.","cfly");
+      add("Pompes larges, arrêt en bas","Mains plus écartées que les épaules, 2 secondes d'arrêt poitrine près du sol. "+pl(un,"série","séries")+" à 1 ou 2 répétitions de l'échec. Si ta machine a un développé ou un butterfly, fais-le à la place.","pompes");
+      add("Tirage horizontal à un bras","Assis face à la poulie basse, une seule main. Gauche d'abord. "+sr+" par bras.","row");
       add("Tirage bras tendus à la poulie haute","Debout face à la poulie, bras presque tendus : tu ramènes la barre jusqu'aux cuisses. "+sr+".","pullover");
-      add("Tirage visage à l'élastique", S(2)+" × 15.","facepull");
-      add("Volant","Haltère tenu à deux mains devant toi, coudes fléchis, rotations gauche-droite comme dans une épingle. "+S(2)+" × "+VO+" s.", reps(S(2),VO,20,"Volant"),"volant");
-      add("Tenue d'haltères lourds","Bras le long du corps, tu serres. "+S(2)+" × "+TE+" s.", reps(S(2),TE,30,"Tenue d'haltères"),"tenue");
+      add("Tirage visage", S(2)+" × 15, à la poulie haute ou à l'élastique.","facepull");
+      add("Volant","Ton haltère tenu à deux mains devant toi, coudes fléchis, rotations gauche-droite comme dans une épingle. "+S(2)+" × "+VO+" s.", reps(S(2),VO,20,"Volant"),"volant");
+      add("Tenue à la poulie basse","Debout à côté de la machine, poignée basse dans une main, charge lourde : tu serres et tu tiens. "+S(2)+" × "+TE+" s par main.", both(S(2),TE,15,"Tenue"),"ctenue");
       add("Vision entre les séries","Pendant chaque récupération : près-loin, ou balayage entre deux repères sur le mur. 30 secondes à chaque fois.");
     } else {
-      add("Montée sur banc, haltères","Un pied sur le banc, tu montes en poussant sur cette jambe, tu redescends en 3 secondes. "+sr+" par jambe.","stepup");
+      add("Montée sur banc","Un pied sur un banc ou une chaise solide, tu montes en poussant sur cette jambe, tu redescends en 3 secondes. "+sr+" par jambe. Poids du corps d'abord, puis un sac à dos chargé.","stepup");
       add("Extension de jambe","Au poste jambes de la machine, une jambe à la fois. "+sr+" par jambe.","legext");
-      add("Soulevé de terre jambes tendues, haltères","Dos plat, tu pousses les hanches vers l'arrière. "+sr+".","rdl");
-      add("Pompes", pl(un,"série","séries")+", en t'arrêtant à 1 ou 2 répétitions de l'échec.","pompes");
-      add("Développé haltères","Allongé au sol ou sur un banc. "+sr+".","floorpress");
-      add("Tirage horizontal à la poulie", sr+".","row");
+      add("Soulevé de terre jambes tendues, à la poulie basse","Face à la machine, barre basse dans les mains, dos plat : tu recules les fesses, puis tu remontes en serrant les fessiers. "+sr+".","crdl");
+      add("Pompes, pieds surélevés","Pieds sur une chaise dès que 12 pompes classiques passent. "+pl(un,"série","séries")+" à 1 ou 2 répétitions de l'échec.","pompes");
+      add("Écarté à la poulie haute, un bras", sr+" par bras, 1 seconde serrée en fin de mouvement.","cfly");
+      add("Tirage horizontal à la poulie basse", sr+".","row");
       add("Tirage vertical à la poulie haute", sr+".","pulldown");
       add("Endurance douce","Facultative : 15 à 20 minutes de marche rapide ou de vélo, à l'allure de la conversation. En famille si tu veux.");
     }
@@ -800,10 +809,10 @@ function standalone(){ try{ return typeof window!=="undefined" && (window.naviga
 function viewReperes(){
   var pos=nowPos(), rw=raceWeek(), h="";
   h+='<section class="card"><h2>Les choix du plan</h2><ul class="list">'+
-     '<li><b>Plus costaud</b> : trois séances de force par semaine. Cuisses le mercredi et le dimanche, dos le mercredi, le vendredi et le dimanche, pectoraux le vendredi et le dimanche.</li>'+
+     '<li><b>Plus costaud</b> : trois séances de force par semaine, sur ta machine (jusqu\'à 50 kg), au poids du corps et avec un sac à dos chargé. Cuisses le mercredi et le dimanche, dos le mercredi, le vendredi et le dimanche, pectoraux le vendredi et le dimanche.</li>'+
      '<li><b>Le volume fait le muscle</b> : environ 10 séries par groupe et par semaine en phase 1, 15 ensuite. La charge monte dès que tu atteins le haut de la fourchette.</li>'+
      '<li><b>Plus vif, plus rapide</b> : un bloc de vivacité de 3 minutes en tête de chaque séance de force, quand tu es frais. Sauts, pompes rapides, sprints de 8 secondes. Peu de répétitions, vitesse maximale.</li>'+
-     '<li><b>Sans assez manger ni dormir, pas de masse</b> : le détail est dans « Manger pour prendre du muscle », plus bas.</li>'+
+     '<li><b>Sans assez manger ni dormir, pas de masse</b> : le détail est dans « Manger », plus bas.</li>'+
      '<li><b>Phase 1 plafonnée</b> : deux séries par exercice et 7/10 au cardio. On reconstruit avant de charger.</li></ul></section>';
 
   h+='<section class="card"><h2>Quand faire les séances</h2><p>Sur le papier, le meilleur moment pour la force est la fin d\'après-midi : on y est un peu plus fort que le matin. Mais sur plusieurs semaines, les progrès en force et en muscle sont comparables matin ou soir, et le corps s\'habitue à l\'heure où il s\'entraîne. Ce qui pèse le plus, c\'est que la séance ait lieu.</p><div class="slots">'+
@@ -816,17 +825,26 @@ function viewReperes(){
      '<p class="note">Après une nuit trop courte, on ne se lève pas plus tôt pour autant : on passe au plan B. Le sommeil construit autant de muscle que la séance.</p>'+
      '<h3>Et 45 minutes tous les jours ?</h3><p>Pas tous les jours : le muscle se construit pendant la récupération, et tu joues déjà au tennis deux fois par semaine. La bonne dose, ce sont trois séances de force de 35 à 50 minutes, le mercredi, le vendredi et le dimanche, et des séances courtes les autres jours.</p></section>';
 
-  h+='<section class="card"><h2>Manger pour prendre du muscle</h2><ul class="list">'+
-     '<li><b>Le repère</b> : au moins 1,6 g de protéines par kilo et par jour, en quatre prises. '+protLine()+'</li>'+
-     '<li><b>Tes aliments</b>, en ordres de grandeur : 3 œufs, environ 19 g · un steak de 150 g, 30 à 40 g · un pavé de saumon de 150 g, environ 30 g · 150 g de petits pois, environ 8 g.</li>'+
-     '<li><b>Les repères officiels</b> : 500 g de bœuf par semaine au plus, soit 3 à 4 steaks, et du poisson deux fois par semaine. Dans ces limites, bœuf et saumon t\'apportent une trentaine de grammes par jour. Le reste doit venir des œufs, des laitages, des légumes secs ou d\'une poudre de protéines.</li>'+
-     '<li><b>L\'énergie</b> : sans féculents, le muscle se construit mal. Parmi tes légumes, seuls le maïs et les petits pois en apportent.</li></ul>'+
+  h+='<section class="card"><h2>Manger : prise de masse sèche</h2><ul class="list">'+
+     '<li><b>Le principe</b> : manger un peu plus que d\'habitude, pas beaucoup plus. Un féculent à chaque repas et une collation après la force suffisent.</li>'+
+     '<li><b>Les protéines</b> : au moins 1,6 g par kilo et par jour, en quatre prises. '+protLine()+'</li>'+
+     '<li><b>Tes sources</b>, en ordres de grandeur : 2 œufs, 13 g · un steak de 150 g, 30 à 40 g · un pavé de saumon de 150 g, 30 g · un grand verre de lait, 10 g · une assiette de pâtes, 12 g · 2 tranches de pain, 5 g.</li>'+
+     '<li><b>Les repères</b> : bœuf, 500 g par semaine au plus, soit 3 steaks ; poisson, deux fois par semaine ; œufs, 2 par jour au plus. Le lait et les féculents font le reste : compte environ un litre de lait par jour.</li>'+
+     '<li><b>Si le lait pèse trop</b> : remplace-en une partie par du fromage blanc, ou par une dose de protéines en poudre dans un verre de lait après la force.</li></ul>'+
+     '<h3>Une journée type</h3><ul class="list">'+
+     '<li>Matin : 2 œufs, du pain, un grand verre de lait.</li>'+
+     '<li>Midi : bœuf trois fois par semaine, saumon deux fois, petits pois les autres jours. Toujours avec du riz, des pâtes ou des pommes de terre, et des légumes.</li>'+
+     '<li>Après la force, ou vers 16 h : un grand verre de lait et du pain.</li>'+
+     '<li>Soir : un féculent, des petits pois ou des légumes, un grand verre de lait.</li></ul>'+
+     '<h3>Rester sec</h3><ul class="list">'+
+     '<li>Pesée une fois par semaine, le matin, à jeun. Le bon rythme : autour d\'un kilo par mois. Plus vite, c\'est du gras : retire un féculent par jour. Rien ne bouge en trois semaines : ajoutes-en un.</li>'+
+     '<li>Tour de taille une fois par mois : s\'il prend plus de 2 cm, tu manges trop.</li>'+
+     '<li>Le cardio du mardi et le tennis restent : ce sont eux qui te gardent affûté.</li></ul>'+
      '<h3>Autour des séances</h3><ul class="list">'+
-     '<li>Séance de 6 h : à jeun, ça passe pour 20 minutes. Le petit-déjeuner suit tout de suite, avec les œufs.</li>'+
-     '<li>Force du mercredi et du vendredi : à 12 h 30, le déjeuner juste après. Force du dimanche : après le petit-déjeuner. À chaque fois, des protéines au repas qui suit.</li>'+
-     '<li>Soirs de tennis : dîner vers 19 h, une collation après si tu as faim.</li>'+
-     '<li>Le total de la journée compte plus que la minute exacte.</li></ul>'+
-     '<p class="meta">À compléter selon ce que tu manges en laitages et en féculents.</p></section>';
+     '<li>Séance de 6 h : à jeun, ça passe pour 20 minutes. Le petit-déjeuner suit tout de suite.</li>'+
+     '<li>Force du mercredi et du vendredi : à 12 h 30, le déjeuner juste après. Force du dimanche : après le petit-déjeuner.</li>'+
+     '<li>Soirs de tennis : dîner vers 19 h, un verre de lait après si tu as faim.</li>'+
+     '<li>Le total de la journée compte plus que la minute exacte.</li></ul></section>';
 
   h+='<section class="card"><h2>Les phases</h2><div>';
   var rows=[["p1",1,5],["p2",6,10],["p3",11,14],["p4",15,rw-2],["aff",rw-1,rw]];
